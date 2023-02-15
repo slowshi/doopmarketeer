@@ -1,0 +1,17 @@
+#root {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(173, 153, 153);
+  font-family: Chalkboard SE,sans-serif;
+}
+
+.w-100 {
+  width: 100%;
+}
+.content {
+  overflow: scroll;
+}
+
+#addressInput {
+  background-color: white;
+}
