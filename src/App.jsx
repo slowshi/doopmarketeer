@@ -71,7 +71,7 @@ function App() {
       <Stack spacing='4' mb='4' w='full' className="content">
         {
           loading === true ?
-            <Center>
+            <Center mt='4'>
               <Spinner
                 thickness='4px'
                 speed='0.65s'
@@ -81,7 +81,7 @@ function App() {
               />
             </Center>
           : dooplications.length === 0 ?
-            <div>No Results</div>
+            <Center mt='4'>No Results</Center>
             :
             dooplications.map((doop, index)=>
               <DoodleCard key={index} doop={doop}></DoodleCard>

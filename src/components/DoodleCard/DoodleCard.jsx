@@ -19,34 +19,43 @@ import {
 import { useState, useEffect } from 'react'
 import './DoodleCard.css'
 import WearbleImage from "../WearableImage/WearableImage";
+import { useInView } from "react-intersection-observer";
 
 function DoodleCard({doop}) {
   const [wearables, setWearables] = useState([]);
   const [image, setImage] = useState('');
   const [avatarLoaded, setAvatarLoaded] = useState(false);
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    fallbackInView: true,
+  });
 
   const isError = false;
   function imageLoaded() {
     setAvatarLoaded(true)
   }
-  useEffect(() => {
-    async function fetchAssets() {
-      const response = await fetch(`https://witty-clothes-bee.cyclic.app/assets/${doop.tokenId}`,  {mode:'cors'});
-      const data = await response.json();
-      setWearables(data.wearables);
 
-      const params = {
-        url: `https://alchemy.mypinata.cloud/ipfs/${data.image.substring(7)}`,
-        w: 256,
-        q: 75
-      }
-      setImage(`https://doopmarket.doodles.app/_next/image?${new URLSearchParams(params)}`);
+  async function fetchAssets() {
+    const response = await fetch(`https://witty-clothes-bee.cyclic.app/assets/${doop.tokenId}`,  {mode:'cors'});
+    const data = await response.json();
+    setWearables(data.wearables);
+
+    const params = {
+      url: `https://alchemy.mypinata.cloud/ipfs/${data.image.substring(7)}`,
+      w: 256,
+      q: 75
     }
-    fetchAssets();
-  }, []);
+    setImage(`https://doopmarket.doodles.app/_next/image?${new URLSearchParams(params)}`);
+  }
+
+  useEffect(() => {
+    if (inView) {
+      fetchAssets();
+    }
+  }, [inView]);
 
   return (
-  <Card>
+  <Card ref={ref}>
     <CardBody>
       <Flex flexWrap='wrap' flexFlow='column'>
         <Flex>
