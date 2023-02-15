@@ -5,7 +5,7 @@ import {
 import { useState } from 'react'
 
 function WearbleImage({item}) {
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(false)
 
   function imageLoaded() {
     setLoaded(true)
