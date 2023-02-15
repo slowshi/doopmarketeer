@@ -14,10 +14,13 @@ import {
   Grid,
   GridItem,
   IconButton,
-  Link
+  Link,
+  InputRightElement,
+  InputGroup,
+  Button
 } from "@chakra-ui/react"
 import { useState, useEffect } from 'react'
-import {FaGithub, FaTwitter} from 'react-icons/fa'
+import {FaGithub, FaTwitter, FaSearch} from 'react-icons/fa'
 import DoodleCard from './components/DoodleCard/DoodleCard'
 import './App.css'
 
@@ -117,7 +120,19 @@ function App() {
       <form className="w-100" onSubmit={handleSearchAddress}>
         <FormControl isInvalid={isError} mb="2">
           <FormLabel color="white">Address</FormLabel>
-          <Input id="addressInput" type="text" value={address} name="address" onChange={handleInputChange} />
+          <InputGroup>
+            <Input id="addressInput" type="text" value={address} name="address" onChange={handleInputChange} />
+            <InputRightElement>
+              <IconButton
+                color='white'
+                backgroundColor='#f2e7ea'
+                aria-label="Twitter"
+                icon={<FaSearch/>}
+                size="md"
+                onClick={handleSearchAddress}
+              />
+            </InputRightElement>
+          </InputGroup>
           {isError ? (
             <FormErrorMessage>Ethereum Address required.</FormErrorMessage>
           ) : ('')}
