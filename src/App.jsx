@@ -8,7 +8,9 @@ import {
   FormHelperText,
   FormErrorMessage,
   Stack,
-  Text
+  Text,
+  Spinner,
+  Center,
 } from "@chakra-ui/react"
 import { useState, useEffect } from 'react'
 import DoodleCard from './components/DoodleCard/DoodleCard'
@@ -16,6 +18,7 @@ import './App.css'
 
 function App() {
   const [address, setInput] = useState('')
+  const [loading, setLoading] = useState(false)
   const [dooplications, setDooplications] = useState([])
   useEffect(() => {
     const searchParams = (new URL(document.location)).searchParams;
@@ -33,12 +36,14 @@ function App() {
   const handleSearchAddress = async (e) => {
     e.preventDefault()
     e.stopPropagation()
+    if(address === '') return;
     setDooplications([])
+    setLoading(true);
     const searchParams = new URLSearchParams({
       address
     });
-    const url = `?${searchParams}`;
-    window.history.replaceState(null, null, url);
+    const url = `?${searchParams}`
+    window.history.pushState(null, null, url)
     fetchDoops(address)
   }
 
@@ -46,6 +51,7 @@ function App() {
     const  res = await fetch(`https://witty-clothes-bee.cyclic.app/doops?address=${address}`, {mode:'cors'})
     const resJSON = await res.json()
     setDooplications(resJSON)
+    setLoading(false);
   }
 
   const isError = false
@@ -63,9 +69,24 @@ function App() {
         </FormControl>
       </form>
       <Stack spacing='4' mb='4' w='full' className="content">
-        {dooplications.map((doop, index)=>
-          <DoodleCard key={index} doop={doop}></DoodleCard>
-        )}
+        {
+          loading === true ?
+            <Center>
+              <Spinner
+                thickness='4px'
+                speed='0.65s'
+                emptyColor='gray.200'
+                color='blue.500'
+                size='xl'
+              />
+            </Center>
+          : dooplications.length === 0 ?
+            <div>No Results</div>
+            :
+            dooplications.map((doop, index)=>
+              <DoodleCard key={index} doop={doop}></DoodleCard>
+            )
+        }
       </Stack>
     </Container>
   )
