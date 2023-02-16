@@ -1,5 +1,6 @@
 const initialState = Object.freeze({
-  dooplications: []
+  dooplications: [],
+  assets: {}
 });
 
 const appReducer = (state = initialState, action) => {
@@ -8,6 +9,14 @@ const appReducer = (state = initialState, action) => {
       return {
         ...state,
         dooplications: [...action.payload]
+      }
+    case "addAssets":
+      return {
+        ...state,
+        assets: {
+          ...state.assets,
+          [action.payload.tokenId]: action.payload.data
+        }
       }
     default:
     return state

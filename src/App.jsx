@@ -8,8 +8,7 @@ import {
   FormHelperText,
   FormErrorMessage,
   Stack,
-  Flex,
-  Spacer,
+  SimpleGrid,
   Text,
   Spinner,
   Center,
@@ -46,10 +45,66 @@ function App() {
   const [address, setInput] = useState('')
   const [searchParamsAddress, setSearchParamsAddress] = useState('')
   const [loading, setLoading] = useState(false)
-  const [stats, setStats] = useState([])
   const [flag, setFlag] = useBoolean()
 
   const dooplications = useSelector((state)=>state.app.dooplications)
+
+  const stats = useSelector((state)=>{
+    //probably fix this later
+    const stats = [
+      {
+        label: 'Total Doops',
+        text: 0
+      },
+      {
+        label: 'Total Wearables',
+        text: 0
+      },
+      {
+        label: 'Total Cost',
+        text: `0 ETH`,
+        helpText: `0 ETH PER`
+      },
+    ];
+    const data = state.app.dooplications;
+
+    const totalCost = data.reduce((acc, item)=>{
+      acc += Number(item.value);
+      return acc
+    }, 0)
+
+
+    const allAssets = data.map((doop)=>{
+      if(typeof state.app.assets[doop.tokenId] === 'undefined') return {}
+      return state.app.assets[doop.tokenId];
+    })
+
+    const totalWearables = allAssets.reduce((acc, item)=>{
+      if(typeof item.wearables !== 'undefined') {
+        acc += item.wearables.length
+      }
+      return acc
+    }, 0)
+    const totalCostInETH = totalCost / 10e17;
+    const costPerInETH = Math.round(((totalCost/totalWearables) / 10e17) * 10000) / 10000;
+
+    return [
+      {
+        label: 'Total Doops',
+        text: data.length
+      },
+      {
+        label: 'Total Wearables',
+        text: totalWearables
+      },
+      {
+        label: 'Total Cost',
+        text: `${totalCostInETH} ETH`,
+        helpText: `${costPerInETH} ETH PER`
+      },
+    ]
+  })
+
 
   useEffect(() => {
     loadAddress()
@@ -116,16 +171,6 @@ function App() {
       acc = value + Number(item.value)
       return acc
     }, 0)
-    setStats([
-      {
-        title: 'Total Doops',
-        data: data.length
-      },
-      {
-        title: 'Total Cost',
-        data: `${totalCost / 10e17} ETH`
-      }
-    ])
     setLoading(false)
   }
   const navGithub = () => {
@@ -210,15 +255,18 @@ function App() {
             :
             <Card w='full' mb='4'>
               <CardBody>
-                <Flex flexWrap='wrap' justifyContent='space-between'>
+                <SimpleGrid columns={[2, null, 3]} spacing='2'>
                   {stats.map((stat, index)=>
                   <Box key={index}>
                     <Stat>
-                      <StatLabel>{stat.title}</StatLabel>
-                      <StatNumber>{stat.data}</StatNumber>
+                      <StatLabel>{stat.label}</StatLabel>
+                      <StatNumber>{stat.text}</StatNumber>
+                      {stat.helpText ?
+                      <StatHelpText>{stat.helpText}</StatHelpText>
+                      : ''}
                     </Stat>
                   </Box>)}
-                </Flex>
+                </SimpleGrid>
               </CardBody>
             </Card>
         }
@@ -227,17 +275,3 @@ function App() {
 }
 
 export default App
-
-
-/*
-Total Doops
-Total Spent in Eth
-Total Items
-
-            <Stack w='full' spacing='4' overflowY="auto" mb='4'>
-              {dooplications.map((doop, index)=>
-                <DoodleCard key={index} doop={doop}></DoodleCard>
-              )}
-            </Stack>
-
-*/

@@ -4,7 +4,8 @@ import rootReducer from './reducers/rootReducer';
 const store = createStore(rootReducer,
 {
   app: {
-    dooplications: []
+    dooplications: [],
+    assets: {}
   }
 });
 

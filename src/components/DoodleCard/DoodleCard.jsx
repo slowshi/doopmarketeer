@@ -21,11 +21,32 @@ import './DoodleCard.css'
 import WearbleImage from "../WearableImage/WearableImage"
 import { useInView } from "react-intersection-observer"
 import {cacheFetch} from '../../utils/cacheFetch';
+import {useSelector, useDispatch} from "react-redux";
 
 function DoodleCard({doop}) {
-  const [wearables, setWearables] = useState([])
-  const [image, setImage] = useState('')
+  const dispatch = useDispatch();
+
   const [avatarLoaded, setAvatarLoaded] = useState(false)
+
+  const image = useSelector((state)=>{
+    const data = state.app.assets[doop.tokenId];
+    if(typeof data === 'undefined') return ''
+
+    const params = {
+      url: `https://alchemy.mypinata.cloud/ipfs/${data.image.substring(7)}`,
+      w: 256,
+      q: 75
+    }
+
+    return `https://doopmarket.doodles.app/_next/image?${new URLSearchParams(params)}`
+  })
+
+  const wearables = useSelector((state)=>{
+    const data = state.app.assets[doop.tokenId];
+    if(typeof data === 'undefined') return []
+    return data.wearables
+  })
+
   const { ref, inView } = useInView({
     triggerOnce: true,
     fallbackInView: true,
@@ -41,14 +62,13 @@ function DoodleCard({doop}) {
       `https://doopmarketeer-api.vercel.app/assets/${doop.tokenId}`,
       {mode:'cors'}
     )
-    setWearables(data.wearables)
-
-    const params = {
-      url: `https://alchemy.mypinata.cloud/ipfs/${data.image.substring(7)}`,
-      w: 256,
-      q: 75
-    }
-    setImage(`https://doopmarket.doodles.app/_next/image?${new URLSearchParams(params)}`)
+    dispatch({
+      type: 'addAssets',
+      payload: {
+        tokenId: doop.tokenId,
+        data: data
+      }
+    });
   }
 
   useEffect(() => {
