@@ -37,14 +37,19 @@ import { useState, useEffect } from 'react'
 import {FaGithub, FaTwitter, FaSearch} from 'react-icons/fa'
 import DoodleCard from './components/DoodleCard/DoodleCard'
 import './App.css'
+import {useSelector, useDispatch} from "react-redux";
+import {cacheFetch} from './utils/cacheFetch';
 
 function App() {
+  const dispatch = useDispatch();
+
   const [address, setInput] = useState('')
   const [searchParamsAddress, setSearchParamsAddress] = useState('')
   const [loading, setLoading] = useState(false)
-  const [dooplications, setDooplications] = useState([])
   const [stats, setStats] = useState([])
   const [flag, setFlag] = useBoolean()
+
+  const dooplications = useSelector((state)=>state.app.dooplications)
 
   useEffect(() => {
     loadAddress()
@@ -80,7 +85,10 @@ function App() {
     e.preventDefault()
     e.stopPropagation()
     if(address === '') return
-    setDooplications([])
+    dispatch({
+      type: 'setDooplications',
+      payload: []
+    });
     setLoading(true)
     const searchParams = new URLSearchParams({
       address
@@ -95,10 +103,15 @@ function App() {
   }
 
   const fetchDoops = async (address) => {
-    const  res = await fetch(`https://doopmarketeer-api.vercel.app/doops?address=${address}`, {mode:'cors'})
-    const resJSON = await res.json()
-    setDooplications(resJSON)
-    const totalCost = resJSON.reduce((acc, item)=>{
+    const data = await cacheFetch.fetch(
+      `https://doopmarketeer-api.vercel.app/doops?address=${address}`,
+      {mode:'cors'}
+    )
+    dispatch({
+      type: 'setDooplications',
+      payload: data
+    });
+    const totalCost = data.reduce((acc, item)=>{
       const value = typeof acc === 'undefined' ? 0 : Number(acc)
       acc = value + Number(item.value)
       return acc
@@ -106,7 +119,7 @@ function App() {
     setStats([
       {
         title: 'Total Doops',
-        data: resJSON.length
+        data: data.length
       },
       {
         title: 'Total Cost',
@@ -191,15 +204,15 @@ function App() {
             !flag ?
             <Stack w='full' spacing='4' overflowY="auto" mb='4'>
               {dooplications.map((doop, index)=>
-                <DoodleCard key={index} doop={doop}></DoodleCard>
+                <DoodleCard key={doop.tokenId} doop={doop}></DoodleCard>
               )}
             </Stack>
             :
             <Card w='full' mb='4'>
               <CardBody>
                 <Flex flexWrap='wrap' justifyContent='space-between'>
-                  {stats.map((stat)=>
-                  <Box>
+                  {stats.map((stat, index)=>
+                  <Box key={index}>
                     <Stat>
                       <StatLabel>{stat.title}</StatLabel>
                       <StatNumber>{stat.data}</StatNumber>

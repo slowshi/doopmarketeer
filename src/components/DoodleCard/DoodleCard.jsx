@@ -20,6 +20,7 @@ import { useState, useEffect } from 'react'
 import './DoodleCard.css'
 import WearbleImage from "../WearableImage/WearableImage"
 import { useInView } from "react-intersection-observer"
+import {cacheFetch} from '../../utils/cacheFetch';
 
 function DoodleCard({doop}) {
   const [wearables, setWearables] = useState([])
@@ -36,8 +37,10 @@ function DoodleCard({doop}) {
   }
 
   async function fetchAssets() {
-    const response = await fetch(`https://doopmarketeer-api.vercel.app/assets/${doop.tokenId}`,  {mode:'cors'})
-    const data = await response.json()
+    const data = await cacheFetch.fetch(
+      `https://doopmarketeer-api.vercel.app/assets/${doop.tokenId}`,
+      {mode:'cors'}
+    )
     setWearables(data.wearables)
 
     const params = {
@@ -49,10 +52,8 @@ function DoodleCard({doop}) {
   }
 
   useEffect(() => {
-    if (inView) {
-      fetchAssets()
-    }
-  }, [inView])
+    fetchAssets()
+  }, [])
 
   return (
   <Card ref={ref}>
