@@ -8,6 +8,8 @@ import {
   FormHelperText,
   FormErrorMessage,
   Stack,
+  Flex,
+  Spacer,
   Text,
   Spinner,
   Center,
@@ -17,7 +19,19 @@ import {
   Link,
   InputRightElement,
   InputGroup,
-  Button
+  Button,
+  ButtonGroup,
+  useBoolean,
+  Card,
+  CardBody,
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  StatArrow,
+  StatGroup,
+  Wrap,
+  WrapItem
 } from "@chakra-ui/react"
 import { useState, useEffect } from 'react'
 import {FaGithub, FaTwitter, FaSearch} from 'react-icons/fa'
@@ -29,6 +43,8 @@ function App() {
   const [searchParamsAddress, setSearchParamsAddress] = useState('')
   const [loading, setLoading] = useState(false)
   const [dooplications, setDooplications] = useState([])
+  const [stats, setStats] = useState([])
+  const [flag, setFlag] = useBoolean()
 
   useEffect(() => {
     loadAddress()
@@ -82,6 +98,21 @@ function App() {
     const  res = await fetch(`https://witty-clothes-bee.cyclic.app/doops?address=${address}`, {mode:'cors'})
     const resJSON = await res.json()
     setDooplications(resJSON)
+    const totalCost = resJSON.reduce((acc, item)=>{
+      const value = typeof acc === 'undefined' ? 0 : Number(acc)
+      acc = value + Number(item.value)
+      return acc
+    }, 0)
+    setStats([
+      {
+        title: 'Total Doops',
+        data: resJSON.length
+      },
+      {
+        title: 'Total Cost',
+        data: `${totalCost / 10e17} ETH`
+      }
+    ])
     setLoading(false)
   }
   const navGithub = () => {
@@ -90,7 +121,7 @@ function App() {
   const isError = false
   return (
     <Container height='full' maxW='container.lg' centerContent>
-      <Grid mt='2' templateColumns="repeat(3, 1fr)" gap={2} alignItems="center"  width='full'>
+      <Grid mt='2' templateColumns="repeat(3, 1fr)" gap={2} alignItems="center"  w='full'>
         <GridItem colSpan={1}>
           <Link href='https://twitter.com/slowshi' isExternal>
             <IconButton
@@ -121,7 +152,7 @@ function App() {
         <FormControl isInvalid={isError} mb="2">
           <FormLabel color="white">Address</FormLabel>
           <InputGroup>
-            <Input id="addressInput" type="text" value={address} name="address" onChange={handleInputChange} />
+            <Input backgroundColor="white" type="text" value={address} name="address" onChange={handleInputChange} />
             <InputRightElement>
               <IconButton
                 color='white'
@@ -138,7 +169,11 @@ function App() {
           ) : ('')}
         </FormControl>
       </form>
-      <Stack spacing='4' mb='4' w='full' className="content">
+      {dooplications.length > 0 && loading === false ?
+        <ButtonGroup gap='4' mb='2'>
+          <Button colorScheme={flag ? 'whiteAlpha' : 'blackAlpha'} onClick={setFlag.off}>History</Button>
+          <Button colorScheme={!flag ? 'whiteAlpha' : 'blackAlpha'} onClick={setFlag.on}>Stats</Button>
+        </ButtonGroup> : ''}
         {
           loading === true ?
             <Center mt='4'>
@@ -153,13 +188,43 @@ function App() {
           : dooplications.length === 0 ?
             <Text color='white' mb='4' fontSize='smaller'>A tool to view Dooplicator and DoopMarket history. This is not affiliated with Doodles. Enter an ethereum address to view history.</Text>
             :
-            dooplications.map((doop, index)=>
-              <DoodleCard key={index} doop={doop}></DoodleCard>
-            )
+            !flag ?
+            <Stack w='full' spacing='4' overflowY="auto" mb='4'>
+              {dooplications.map((doop, index)=>
+                <DoodleCard key={index} doop={doop}></DoodleCard>
+              )}
+            </Stack>
+            :
+            <Card w='full' mb='4'>
+              <CardBody>
+                <Flex flexWrap='wrap' justifyContent='space-between'>
+                  {stats.map((stat)=>
+                  <Box>
+                    <Stat>
+                      <StatLabel>{stat.title}</StatLabel>
+                      <StatNumber>{stat.data}</StatNumber>
+                    </Stat>
+                  </Box>)}
+                </Flex>
+              </CardBody>
+            </Card>
         }
-      </Stack>
     </Container>
   )
 }
 
 export default App
+
+
+/*
+Total Doops
+Total Spent in Eth
+Total Items
+
+            <Stack w='full' spacing='4' overflowY="auto" mb='4'>
+              {dooplications.map((doop, index)=>
+                <DoodleCard key={index} doop={doop}></DoodleCard>
+              )}
+            </Stack>
+
+*/

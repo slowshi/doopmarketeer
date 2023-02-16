@@ -14,7 +14,7 @@ import {
   WrapItem,
   Center,
   Skeleton,
-  SkeletonCircle
+  SkeletonCircle,
 } from "@chakra-ui/react"
 import { useState, useEffect } from 'react'
 import './DoodleCard.css'
@@ -67,7 +67,7 @@ function DoodleCard({doop}) {
           <Box>
             <Stack>
                 <Skeleton height='22px' w='full' isLoaded={avatarLoaded}>
-                  <Text>{doop.tokenId}</Text>
+                  <Text>#{doop.tokenId}</Text>
                 </Skeleton>
                 <Skeleton height='22px' isLoaded={avatarLoaded}>
                   <Text>{doop.value > 0 ? `${doop.value / 10e17} ETH` : 'none'}</Text>
