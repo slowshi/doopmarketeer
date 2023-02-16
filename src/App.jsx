@@ -1,14 +1,11 @@
 import {
   Container,
-  Box,
   Heading,
   Input,
   FormControl,
   FormLabel,
-  FormHelperText,
   FormErrorMessage,
   Stack,
-  SimpleGrid,
   Text,
   Spinner,
   Center,
@@ -21,90 +18,24 @@ import {
   Button,
   ButtonGroup,
   useBoolean,
-  Card,
-  CardBody,
-  Stat,
-  StatLabel,
-  StatNumber,
-  StatHelpText,
-  StatArrow,
-  StatGroup,
-  Wrap,
-  WrapItem
 } from "@chakra-ui/react"
 import { useState, useEffect } from 'react'
 import {FaGithub, FaTwitter, FaSearch} from 'react-icons/fa'
 import DoodleCard from './components/DoodleCard/DoodleCard'
+import StatsCard from './components/StatsCard/StatsCard'
 import './App.css'
-import {useSelector, useDispatch} from "react-redux";
-import {cacheFetch} from './utils/cacheFetch';
+import {useSelector, useDispatch, shallowEqual} from "react-redux"
+import {cacheFetch} from './utils/cacheFetch'
 
 function App() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const [address, setInput] = useState('')
   const [searchParamsAddress, setSearchParamsAddress] = useState('')
   const [loading, setLoading] = useState(false)
   const [flag, setFlag] = useBoolean()
 
-  const dooplications = useSelector((state)=>state.app.dooplications)
-
-  const stats = useSelector((state)=>{
-    //probably fix this later
-    const stats = [
-      {
-        label: 'Total Doops',
-        text: 0
-      },
-      {
-        label: 'Total Wearables',
-        text: 0
-      },
-      {
-        label: 'Total Cost',
-        text: `0 ETH`,
-        helpText: `0 ETH PER`
-      },
-    ];
-    const data = state.app.dooplications;
-
-    const totalCost = data.reduce((acc, item)=>{
-      acc += Number(item.value);
-      return acc
-    }, 0)
-
-
-    const allAssets = data.map((doop)=>{
-      if(typeof state.app.assets[doop.tokenId] === 'undefined') return {}
-      return state.app.assets[doop.tokenId];
-    })
-
-    const totalWearables = allAssets.reduce((acc, item)=>{
-      if(typeof item.wearables !== 'undefined') {
-        acc += item.wearables.length
-      }
-      return acc
-    }, 0)
-    const totalCostInETH = totalCost / 10e17;
-    const costPerInETH = Math.round(((totalCost/totalWearables) / 10e17) * 10000) / 10000;
-
-    return [
-      {
-        label: 'Total Doops',
-        text: data.length
-      },
-      {
-        label: 'Total Wearables',
-        text: totalWearables
-      },
-      {
-        label: 'Total Cost',
-        text: `${totalCostInETH} ETH`,
-        helpText: `${costPerInETH} ETH PER`
-      },
-    ]
-  })
-
+  const dooplications = useSelector((state)=>state.app.dooplications, shallowEqual)
 
   useEffect(() => {
     loadAddress()
@@ -123,13 +54,11 @@ function App() {
       loadAddress()
     }
 
-    window.addEventListener("popstate", handlePopstate);
+    window.addEventListener("popstate", handlePopstate)
 
     return () => {
-      window.removeEventListener("popstate", handlePopstate);
-    };
-
-
+      window.removeEventListener("popstate", handlePopstate)
+    }
   }, [])
 
   const handleInputChange = (e) => {
@@ -143,7 +72,7 @@ function App() {
     dispatch({
       type: 'setDooplications',
       payload: []
-    });
+    })
     setLoading(true)
     const searchParams = new URLSearchParams({
       address
@@ -165,7 +94,7 @@ function App() {
     dispatch({
       type: 'setDooplications',
       payload: data
-    });
+    })
     const totalCost = data.reduce((acc, item)=>{
       const value = typeof acc === 'undefined' ? 0 : Number(acc)
       acc = value + Number(item.value)
@@ -253,22 +182,7 @@ function App() {
               )}
             </Stack>
             :
-            <Card w='full' mb='4'>
-              <CardBody>
-                <SimpleGrid columns={[2, null, 3]} spacing='2'>
-                  {stats.map((stat, index)=>
-                  <Box key={index}>
-                    <Stat>
-                      <StatLabel>{stat.label}</StatLabel>
-                      <StatNumber>{stat.text}</StatNumber>
-                      {stat.helpText ?
-                      <StatHelpText>{stat.helpText}</StatHelpText>
-                      : ''}
-                    </Stat>
-                  </Box>)}
-                </SimpleGrid>
-              </CardBody>
-            </Card>
+            <StatsCard/>
         }
     </Container>
   )

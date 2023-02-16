@@ -4,15 +4,10 @@ import {
   CardBody,
   Image,
   Text,
-  Heading,
-  Button,
-  CardFooter,
   Flex,
   Box,
-  Spacer,
   Wrap,
   WrapItem,
-  Center,
   Skeleton,
   SkeletonCircle,
 } from "@chakra-ui/react"
@@ -20,16 +15,16 @@ import { useState, useEffect } from 'react'
 import './DoodleCard.css'
 import WearbleImage from "../WearableImage/WearableImage"
 import { useInView } from "react-intersection-observer"
-import {cacheFetch} from '../../utils/cacheFetch';
-import {useSelector, useDispatch} from "react-redux";
+import {cacheFetch} from '../../utils/cacheFetch'
+import {useSelector, useDispatch, shallowEqual} from "react-redux"
 
 function DoodleCard({doop}) {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const [avatarLoaded, setAvatarLoaded] = useState(false)
 
   const image = useSelector((state)=>{
-    const data = state.app.assets[doop.tokenId];
+    const data = state.app.assets[doop.tokenId]
     if(typeof data === 'undefined') return ''
 
     const params = {
@@ -39,13 +34,13 @@ function DoodleCard({doop}) {
     }
 
     return `https://doopmarket.doodles.app/_next/image?${new URLSearchParams(params)}`
-  })
+  }, shallowEqual)
 
   const wearables = useSelector((state)=>{
-    const data = state.app.assets[doop.tokenId];
+    const data = state.app.assets[doop.tokenId]
     if(typeof data === 'undefined') return []
     return data.wearables
-  })
+  }, shallowEqual)
 
   const { ref, inView } = useInView({
     triggerOnce: true,
@@ -68,7 +63,7 @@ function DoodleCard({doop}) {
         tokenId: doop.tokenId,
         data: data
       }
-    });
+    })
   }
 
   useEffect(() => {

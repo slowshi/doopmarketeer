@@ -1,7 +1,7 @@
 const initialState = Object.freeze({
   dooplications: [],
   assets: {}
-});
+})
 
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -23,6 +23,6 @@ const appReducer = (state = initialState, action) => {
   }
 }
 
-export default appReducer;
+export default appReducer
 
 
