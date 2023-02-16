@@ -7,10 +7,6 @@ Finds Dooplicator and Doopmarket history of a given Ethereum Address. Using doop
 
 
 ### Todo:
-- Show totals
-  - doops
-  - money spent
-- Allow for ENS
 - Wearable Info
 - Wearable Market Prices?
 
