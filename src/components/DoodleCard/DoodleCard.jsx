@@ -36,7 +36,7 @@ function DoodleCard({doop}) {
   }
 
   async function fetchAssets() {
-    const response = await fetch(`https://witty-clothes-bee.cyclic.app/assets/${doop.tokenId}`,  {mode:'cors'})
+    const response = await fetch(`https://doopmarketeer-api.vercel.app/assets/${doop.tokenId}`,  {mode:'cors'})
     const data = await response.json()
     setWearables(data.wearables)
 

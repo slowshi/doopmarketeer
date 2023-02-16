@@ -95,7 +95,7 @@ function App() {
   }
 
   const fetchDoops = async (address) => {
-    const  res = await fetch(`https://witty-clothes-bee.cyclic.app/doops?address=${address}`, {mode:'cors'})
+    const  res = await fetch(`https://doopmarketeer-api.vercel.app/doops?address=${address}`, {mode:'cors'})
     const resJSON = await res.json()
     setDooplications(resJSON)
     const totalCost = resJSON.reduce((acc, item)=>{
