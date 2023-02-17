@@ -20,36 +20,64 @@ function DoopFeed({item}) {
   const [loading, setLoading] = useState(false)
   const [loadingMore, setLoadingMore] = useState(false)
   const feed = useSelector((state)=>state.app.feed, shallowEqual)
+  const latestBlockNumber = useSelector((state)=>{
+    let blockNumber = 0;
+    if(state.app.feed.length > 0) {
+      blockNumber =  state.app.feed[0].blockNumber
+    }
+    return blockNumber
+  })
+
   const [page, setPage] = useState(1)
-  async function fetchAssets() {
+
+  const fetchAssets = async ()=> {
     setLoading(true)
+    await setPage(1)
     const data = await cacheFetch.fetch(
-      `https://doopmarketeer-api.vercel.app/history?page=${page}&offset=5`,
+      `https://doopmarketeer-api.vercel.app/history?page=1&offset=5`,
       {mode:'cors'}
     )
     dispatch({
       type: 'setFeed',
       payload: data
     })
-    setPage(page+1);
     setLoading(false)
   }
+
+  const checkFeed = async () => {
+    if(latestBlockNumber === 0) return;
+    const data = await cacheFetch.fetch(
+      `https://doopmarketeer-api.vercel.app/feed?startBlock=${latestBlockNumber}`,
+      {mode:'cors'},
+      true
+    )
+    dispatch({
+      type: 'prependFeed',
+      payload: data
+    })
+  }
+
   const loadMore =  async() => {
     setLoadingMore(true)
     const data = await cacheFetch.fetch(
-      `https://doopmarketeer-api.vercel.app/history?page=${page}&offset=5`,
+      `https://doopmarketeer-api.vercel.app/history?page=${page + 1}&offset=5`,
       {mode:'cors'}
     )
     dispatch({
       type: 'appendFeed',
       payload: data
     })
-    setPage(page+1);
+    setPage(page+1)
     setLoadingMore(false)
   }
+
   useEffect(() => {
     fetchAssets()
-  }, [])
+  },[])
+  useEffect(() => {
+    const feedInterval = setInterval(checkFeed, 20000);
+    return () => clearInterval(feedInterval);
+  },[latestBlockNumber])
   return (
     <Stack w='full'>
       {loading === true ?

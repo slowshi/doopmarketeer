@@ -44,6 +44,14 @@ const appReducer = (state = initialState, action) => {
             ...action.payload
           ]
       }
+    case "prependFeed":
+      return {
+        ...state,
+        feed: [
+          ...action.payload,
+          ...state.feed
+        ]
+    }
     default:
     return state
   }
