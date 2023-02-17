@@ -38,7 +38,7 @@ function LeaderboardCard({item}) {
       return 0;
     })
 
-    return data.slice(0,10)
+    return data.slice(0,20)
   }
   const leaderboard = useSelector(leaderboardSelector, shallowEqual)
 

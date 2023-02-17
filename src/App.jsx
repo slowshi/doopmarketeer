@@ -175,8 +175,10 @@ function App() {
               />
             </Center>
           : dooplications.length === 0 ?
-            <Box w='100' overflowY='scroll'>
-              <Text color='white' mb='4' fontSize='smaller'>A tool to view Dooplicator and DoopMarket history. This is not affiliated with Doodles. Enter an ethereum address to view history.</Text>
+            <Box w='full' overflowY='scroll'>
+              <Center>
+                <Text color='white' mb='4' fontSize='smaller'>A tool to view Dooplicator and DoopMarket history. This is not affiliated with Doodles. Enter an ethereum address to view history.</Text>
+              </Center>
               <LeaderboardCard/>
             </Box>
             :
