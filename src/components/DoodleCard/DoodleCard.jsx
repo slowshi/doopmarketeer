@@ -86,7 +86,7 @@ function DoodleCard({doop}) {
                   <Text>#{doop.tokenId}</Text>
                 </Skeleton>
                 <Skeleton height='22px' isLoaded={avatarLoaded}>
-                  <Text>{doop.value > 0 ? `${doop.value / 10e17} ETH` : 'none'}</Text>
+                  <Text>{doop.value > 0 ? `${doop.value / 10e17} Ξ` : 'none'}</Text>
                 </Skeleton>
                 <Skeleton height='22px' isLoaded={avatarLoaded}>
                   <Text>{doop.functionName === 'dooplicateItem'? 'DoopMarket':'Dooplicator'}</Text>

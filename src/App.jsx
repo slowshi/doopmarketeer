@@ -1,3 +1,4 @@
+import './App.css'
 import {
   Container,
   Heading,
@@ -17,15 +18,16 @@ import {
   InputGroup,
   Button,
   ButtonGroup,
+  Box,
   useBoolean,
 } from "@chakra-ui/react"
 import { useState, useEffect } from 'react'
+import {useSelector, useDispatch, shallowEqual} from "react-redux"
 import {FaGithub, FaTwitter, FaSearch} from 'react-icons/fa'
+import {cacheFetch} from './utils/cacheFetch'
 import DoodleCard from './components/DoodleCard/DoodleCard'
 import StatsCard from './components/StatsCard/StatsCard'
-import './App.css'
-import {useSelector, useDispatch, shallowEqual} from "react-redux"
-import {cacheFetch} from './utils/cacheFetch'
+import LeaderboardCard from './components/LeaderboardCard/LeaderboardCard'
 
 function App() {
   const dispatch = useDispatch()
@@ -173,7 +175,10 @@ function App() {
               />
             </Center>
           : dooplications.length === 0 ?
-            <Text color='white' mb='4' fontSize='smaller'>A tool to view Dooplicator and DoopMarket history. This is not affiliated with Doodles. Enter an ethereum address to view history.</Text>
+            <Box w='100' overflowY='scroll'>
+              <Text color='white' mb='4' fontSize='smaller'>A tool to view Dooplicator and DoopMarket history. This is not affiliated with Doodles. Enter an ethereum address to view history.</Text>
+              <LeaderboardCard/>
+            </Box>
             :
             !flag ?
             <Stack w='full' spacing='4' overflowY="auto" mb='4'>

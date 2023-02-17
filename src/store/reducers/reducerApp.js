@@ -1,6 +1,8 @@
 const initialState = Object.freeze({
   dooplications: [],
-  assets: {}
+  assets: {},
+  leaderboard: [],
+  leaderboardSort: 'totalDoops'
 })
 
 const appReducer = (state = initialState, action) => {
@@ -9,6 +11,16 @@ const appReducer = (state = initialState, action) => {
       return {
         ...state,
         dooplications: [...action.payload]
+      }
+    case "setLeaderboard":
+      return {
+        ...state,
+        leaderboard: [...action.payload]
+      }
+    case "sortLeaderboard":
+      return {
+        ...state,
+        leaderboardSort: action.payload
       }
     case "addAssets":
       return {
