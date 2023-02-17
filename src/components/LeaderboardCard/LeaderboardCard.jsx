@@ -45,7 +45,7 @@ function LeaderboardCard({item}) {
   async function fetchAssets() {
     setLoading(true)
     const data = await cacheFetch.fetch(
-      `http://localhost:8000/leaderboard`,
+      `https://doopmarketeer-api.vercel.app/leaderboard`,
       {mode:'cors'}
     )
     dispatch({
