@@ -9,6 +9,8 @@ import {
   Wrap,
   WrapItem,
   Skeleton,
+  Center,
+  Link,
   SkeletonCircle,
 } from "@chakra-ui/react"
 import { useState, useEffect } from 'react'
@@ -75,24 +77,30 @@ function DoodleCard({doop}) {
     <CardBody>
       <Flex flexWrap='wrap' flexFlow='column'>
         <Flex>
-          <Box>
-            <SkeletonCircle w='90px' h='90px' mt='4' marginEnd='4' isLoaded={avatarLoaded}>
+          <Box me='6'>
+            <SkeletonCircle w='90px' h='90px' isLoaded={avatarLoaded}>
               <Image rounded='full' w='90px' src={image} onLoad={imageLoaded}></Image>
             </SkeletonCircle>
+            <Skeleton height='22px' w='full' isLoaded={avatarLoaded}>
+              <Center>
+                <Text>#{doop.tokenId}</Text>
+              </Center>
+            </Skeleton>
           </Box>
           <Box>
-            <Stack>
-                <Skeleton height='22px' w='full' isLoaded={avatarLoaded}>
-                  <Text>#{doop.tokenId}</Text>
-                </Skeleton>
+            <Stack h='100' justifyContent='space-evenly'>
                 <Skeleton height='22px' isLoaded={avatarLoaded}>
-                  <Text>{doop.value > 0 ? `${doop.value / 10e17} Ξ` : 'none'}</Text>
-                </Skeleton>
-                <Skeleton height='22px' isLoaded={avatarLoaded}>
-                  <Text>{doop.functionName === 'dooplicateItem'? 'DoopMarket':'Dooplicator'}</Text>
+                  <Text>
+                    {doop.functionName === 'dooplicateItem'? `DoopMarket - ${doop.value / 10e17} Ξ`:'Dooplicator'}
+                  </Text>
                 </Skeleton>
                 <Skeleton height='22px' isLoaded={avatarLoaded}>
                   <Text>{new Date(doop.timeStamp * 1000).toLocaleString()}</Text>
+                </Skeleton>
+                <Skeleton height='22px' isLoaded={avatarLoaded}>
+                  <Link href={`/?address=${doop.from}`}>
+                    {doop.from.substring(0, 4) + "..." + doop.from.substring(doop.from.length - 4)}
+                  </Link>
                 </Skeleton>
             </Stack>
           </Box>

@@ -7,6 +7,7 @@ const store = createStore(rootReducer,
     dooplications: [],
     assets: {},
     leaderboard: [],
+    feed: [],
     leaderboardSort: 'totalDoops'
   }
 });

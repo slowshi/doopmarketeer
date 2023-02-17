@@ -6,6 +6,7 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
+  FormHelperText,
   Stack,
   Text,
   Spinner,
@@ -27,6 +28,7 @@ import {FaGithub, FaTwitter, FaSearch} from 'react-icons/fa'
 import {cacheFetch} from './utils/cacheFetch'
 import DoodleCard from './components/DoodleCard/DoodleCard'
 import StatsCard from './components/StatsCard/StatsCard'
+import DoopFeed from './components/DoopFeed/DoopFeed'
 import LeaderboardCard from './components/LeaderboardCard/LeaderboardCard'
 
 function App() {
@@ -36,6 +38,7 @@ function App() {
   const [searchParamsAddress, setSearchParamsAddress] = useState('')
   const [loading, setLoading] = useState(false)
   const [flag, setFlag] = useBoolean()
+  const [leaderboard, setLeaderboard] = useBoolean()
 
   const dooplications = useSelector((state)=>state.app.dooplications, shallowEqual)
 
@@ -139,7 +142,7 @@ function App() {
       </Grid>
       <form className="w-100" onSubmit={handleSearchAddress}>
         <FormControl isInvalid={isError} mb="2">
-          <FormLabel color="white">Address</FormLabel>
+          <FormLabel color="white">Ethereum Address</FormLabel>
           <InputGroup>
             <Input backgroundColor="white" type="text" value={address} name="address" onChange={handleInputChange} />
             <InputRightElement>
@@ -156,6 +159,7 @@ function App() {
           {isError ? (
             <FormErrorMessage>Ethereum Address required.</FormErrorMessage>
           ) : ('')}
+          <FormHelperText color='white' fontSize='xs'>* Not affiliated with Doodles.</FormHelperText>
         </FormControl>
       </form>
       {dooplications.length > 0 && loading === false ?
@@ -163,34 +167,39 @@ function App() {
           <Button colorScheme={flag ? 'whiteAlpha' : 'blackAlpha'} onClick={setFlag.off}>History</Button>
           <Button colorScheme={!flag ? 'whiteAlpha' : 'blackAlpha'} onClick={setFlag.on}>Stats</Button>
         </ButtonGroup> : ''}
-        {
-          loading === true ?
-            <Center mt='4'>
-              <Spinner
-                thickness='4px'
-                speed='0.65s'
-                emptyColor='gray.300'
-                color='white'
-                size='xl'
-              />
-            </Center>
-          : dooplications.length === 0 ?
-            <Box w='full' overflowY='scroll'>
-              <Center>
-                <Text color='white' mb='4' fontSize='smaller'>A tool to view Dooplicator and DoopMarket history. This is not affiliated with Doodles. Enter an ethereum address to view history.</Text>
-              </Center>
-              <LeaderboardCard/>
-            </Box>
-            :
-            !flag ?
-            <Stack w='full' spacing='4' overflowY="auto" mb='4'>
-              {dooplications.map((doop, index)=>
-                <DoodleCard key={doop.tokenId} doop={doop}></DoodleCard>
-              )}
-            </Stack>
-            :
-            <StatsCard/>
-        }
+      {dooplications.length == 0 && loading === false ?
+        <ButtonGroup gap='4' mb='2'>
+          <Button colorScheme={leaderboard ? 'whiteAlpha' : 'blackAlpha'} onClick={setLeaderboard.off}>Feed</Button>
+          <Button colorScheme={!leaderboard ? 'whiteAlpha' : 'blackAlpha'} onClick={setLeaderboard.on}>Leaderboard</Button>
+        </ButtonGroup> : ''}
+      {loading === true ?
+        <Center mt='4'>
+          <Spinner
+            thickness='4px'
+            speed='0.65s'
+            emptyColor='gray.300'
+            color='white'
+            size='xl'
+          />
+        </Center>
+      : dooplications.length === 0 ?
+        <Box w='full' overflowY='scroll' mb='4'>
+          {!leaderboard ?
+          <DoopFeed/>
+          :
+          <LeaderboardCard/>
+          }
+        </Box>
+        :
+        !flag ?
+        <Stack w='full' spacing='4' overflowY="auto" mb='4'>
+          {dooplications.map((doop, index)=>
+            <DoodleCard key={doop.tokenId} doop={doop}></DoodleCard>
+          )}
+        </Stack>
+        :
+        <StatsCard/>
+      }
     </Container>
   )
 }

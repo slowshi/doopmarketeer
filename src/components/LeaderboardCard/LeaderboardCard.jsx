@@ -68,8 +68,7 @@ function LeaderboardCard({item}) {
   const fontSize = useBreakpointValue({ base: "sm", sm: "md" });
 
   return (
-    <Stack w='full' mb='4'>
-      <Heading size="lg" color='white' fontFamily='Chalkboard SE,sans-serif'>Leaderboard</Heading>
+    <Stack w='full'>
       {loading === true ?
         <Center mt='4'>
           <Spinner

@@ -2,6 +2,7 @@ const initialState = Object.freeze({
   dooplications: [],
   assets: {},
   leaderboard: [],
+  feed: [],
   leaderboardSort: 'totalDoops'
 })
 
@@ -29,6 +30,19 @@ const appReducer = (state = initialState, action) => {
           ...state.assets,
           [action.payload.tokenId]: action.payload.data
         }
+      }
+    case "setFeed":
+        return {
+          ...state,
+          feed: [...action.payload]
+      }
+    case "appendFeed":
+        return {
+          ...state,
+          feed: [
+            ...state.feed,
+            ...action.payload
+          ]
       }
     default:
     return state
