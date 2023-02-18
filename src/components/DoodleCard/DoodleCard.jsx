@@ -98,7 +98,7 @@ function DoodleCard({doop}) {
                   <Text>{new Date(doop.timeStamp * 1000).toLocaleString()}</Text>
                 </Skeleton>
                 <Skeleton height='22px' isLoaded={avatarLoaded}>
-                  <Link href={`/?address=${doop.from}`}>
+                  <Link fontWeight='bold' color='#746566' href={`/?address=${doop.from}`}>
                     {doop.from.substring(0, 4) + "..." + doop.from.substring(doop.from.length - 4)}
                   </Link>
                 </Skeleton>

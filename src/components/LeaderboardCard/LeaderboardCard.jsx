@@ -85,14 +85,14 @@ function LeaderboardCard({item}) {
             <Stack w='full'>
             <Box w='full' display='flex' justifyContent='space-between'>
               <Text fontSize={fontSize} flex='2'>Address</Text>
-              <Link fontSize={fontSize} flex='1' onClick={()=>sortLeaderboard('dooplicate')}>Doop</Link>
-              <Link fontSize={fontSize} flex='1' onClick={()=>sortLeaderboard('dooplicateItem')}>Market</Link>
-              <Link fontSize={fontSize} flex='1' onClick={()=>sortLeaderboard('totalDoops')}>Total</Link>
-              <Link fontSize={fontSize} flex='1' onClick={()=>sortLeaderboard('value')}>Spent</Link>
+              <Link fontWeight='bold' color='#746566' fontSize={fontSize} flex='1' onClick={()=>sortLeaderboard('dooplicate')}>Doop</Link>
+              <Link fontWeight='bold' color='#746566' fontSize={fontSize} flex='1' onClick={()=>sortLeaderboard('dooplicateItem')}>Market</Link>
+              <Link fontWeight='bold' color='#746566' fontSize={fontSize} flex='1' onClick={()=>sortLeaderboard('totalDoops')}>Total</Link>
+              <Link fontWeight='bold' color='#746566' fontSize={fontSize} flex='1' onClick={()=>sortLeaderboard('value')}>Volume</Link>
             </Box>
             {leaderboard.map((user)=>
               <Box key={user.address} w='full' display='flex' justifyContent='space-between'>
-                <Link fontSize={fontSize} flex='2' href={`/?address=${user.address}`}>{user.shortAddress}</Link>
+                <Link fontWeight='bold' color='#746566' fontSize={fontSize} flex='2' href={`/?address=${user.address}`}>{user.shortAddress}</Link>
                 <Text fontSize={fontSize} flex='1'>{user.dooplicate}</Text>
                 <Text fontSize={fontSize} flex='1'>{user.dooplicateItem}</Text>
                 <Text fontSize={fontSize} flex='1'>{user.totalDoops}</Text>
