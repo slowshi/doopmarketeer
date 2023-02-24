@@ -30,14 +30,14 @@ import DoodleCard from './components/DoodleCard/DoodleCard'
 import StatsCard from './components/StatsCard/StatsCard'
 import DoopFeed from './components/DoopFeed/DoopFeed'
 import LeaderboardCard from './components/LeaderboardCard/LeaderboardCard'
-
+import { API_URL } from './utils/constants'
 function App() {
   const dispatch = useDispatch()
 
   const [address, setInput] = useState('')
   const [searchParamsAddress, setSearchParamsAddress] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [flag, setFlag] = useBoolean()
+  const [loading, setLoading] = useBoolean()
+  const [stats, setStats] = useBoolean()
   const [leaderboard, setLeaderboard] = useBoolean()
 
   const dooplications = useSelector((state)=>state.app.dooplications, shallowEqual)
@@ -48,7 +48,7 @@ function App() {
       const searchParams = (new URL(document.location)).searchParams
       if(searchParams.has('address')) {
         const address = searchParams.get('address')
-        setLoading(true)
+        setLoading.on()
         setInput(address)
         setSearchParamsAddress(address)
         fetchDoops(address)
@@ -78,7 +78,7 @@ function App() {
       type: 'setDooplications',
       payload: []
     })
-    setLoading(true)
+    setLoading.on()
     const searchParams = new URLSearchParams({
       address
     })
@@ -93,7 +93,7 @@ function App() {
 
   const fetchDoops = async (address) => {
     const data = await cacheFetch.fetch(
-      `https://doopmarketeer-api.vercel.app/doops?address=${address}`,
+      `${API_URL}/doops?address=${address}`,
       {mode:'cors'}
     )
     dispatch({
@@ -105,7 +105,7 @@ function App() {
       acc = value + Number(item.value)
       return acc
     }, 0)
-    setLoading(false)
+    setLoading.off()
   }
   const navGithub = () => {
 
@@ -164,8 +164,8 @@ function App() {
       </form>
       {dooplications.length > 0 && loading === false ?
         <ButtonGroup gap='4' mb='2'>
-          <Button colorScheme={flag ? 'whiteAlpha' : 'blackAlpha'} onClick={setFlag.off}>History</Button>
-          <Button colorScheme={!flag ? 'whiteAlpha' : 'blackAlpha'} onClick={setFlag.on}>Stats</Button>
+          <Button colorScheme={stats ? 'whiteAlpha' : 'blackAlpha'} onClick={setStats.off}>History</Button>
+          <Button colorScheme={!stats ? 'whiteAlpha' : 'blackAlpha'} onClick={setStats.on}>Stats</Button>
         </ButtonGroup> : ''}
       {dooplications.length == 0 && loading === false ?
         <ButtonGroup gap='4' mb='2'>
@@ -191,7 +191,7 @@ function App() {
           }
         </Box>
         :
-        !flag ?
+        !stats ?
         <Stack w='full' spacing='4' overflowY="auto" mb='4'>
           {dooplications.map((doop, index)=>
             <DoodleCard key={doop.tokenId} doop={doop}></DoodleCard>

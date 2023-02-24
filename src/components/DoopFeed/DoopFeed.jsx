@@ -15,6 +15,8 @@ import { useState, useEffect } from 'react'
 import {useSelector, useDispatch, shallowEqual} from "react-redux"
 import {cacheFetch} from '../../utils/cacheFetch'
 import DoodleCard from "../DoodleCard/DoodleCard"
+import { API_URL } from '../../utils/constants'
+
 function DoopFeed({item}) {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
@@ -34,7 +36,7 @@ function DoopFeed({item}) {
     setLoading(true)
     await setPage(1)
     const data = await cacheFetch.fetch(
-      `https://doopmarketeer-api.vercel.app/history?page=1&offset=5`,
+      `${API_URL}/history?page=1&offset=5`,
       {mode:'cors'}
     )
     dispatch({
@@ -47,7 +49,7 @@ function DoopFeed({item}) {
   const checkFeed = async () => {
     if(latestBlockNumber === 0) return;
     const data = await cacheFetch.fetch(
-      `https://doopmarketeer-api.vercel.app/feed?startBlock=${latestBlockNumber}`,
+      `${API_URL}/feed?startBlock=${latestBlockNumber}`,
       {mode:'cors'},
       true
     )
@@ -60,7 +62,7 @@ function DoopFeed({item}) {
   const loadMore =  async() => {
     setLoadingMore(true)
     const data = await cacheFetch.fetch(
-      `https://doopmarketeer-api.vercel.app/history?page=${page + 1}&offset=5`,
+      `${API_URL}/history?page=${page + 1}&offset=5`,
       {mode:'cors'}
     )
     dispatch({

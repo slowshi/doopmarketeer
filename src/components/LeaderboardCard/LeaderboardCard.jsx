@@ -13,6 +13,7 @@ import {
 import { useState, useEffect } from 'react'
 import {useSelector, useDispatch, shallowEqual} from "react-redux"
 import {cacheFetch} from '../../utils/cacheFetch'
+import { API_URL } from '../../utils/constants'
 
 function LeaderboardCard({item}) {
   const dispatch = useDispatch()
@@ -45,7 +46,7 @@ function LeaderboardCard({item}) {
   async function fetchAssets() {
     setLoading(true)
     const data = await cacheFetch.fetch(
-      `https://doopmarketeer-api.vercel.app/leaderboard`,
+      `${API_URL}/leaderboard`,
       {mode:'cors'}
     )
     dispatch({

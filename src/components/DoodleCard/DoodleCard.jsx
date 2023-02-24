@@ -19,6 +19,7 @@ import WearbleImage from "../WearableImage/WearableImage"
 import { useInView } from "react-intersection-observer"
 import {cacheFetch} from '../../utils/cacheFetch'
 import {useSelector, useDispatch, shallowEqual} from "react-redux"
+import { API_URL } from '../../utils/constants'
 
 function DoodleCard({doop}) {
   const dispatch = useDispatch()
@@ -37,11 +38,30 @@ function DoodleCard({doop}) {
 
     return `https://doopmarket.doodles.app/_next/image?${new URLSearchParams(params)}`
   }, shallowEqual)
+  const totalCost = useSelector((state)=>{
+    const data = state.app.assets[doop.tokenId]
+    if(typeof data === 'undefined') return 0
+    return data.costs.reduce((acc, cost)=>{
+      return acc + cost.activeListing.price;
+    },0)
+  }, shallowEqual);
 
   const wearables = useSelector((state)=>{
     const data = state.app.assets[doop.tokenId]
     if(typeof data === 'undefined') return []
-    return data.wearables
+    const costMap = data.costs.reduce((acc, cost)=>{
+      acc = {
+        ...acc,
+        [cost.editionID]: cost.activeListing?.vaultType === 'A.ead892083b3e2c6c.DapperUtilityCoin.Vault' ? `$${cost.activeListing.price}` : `${cost.activeListing.price} FLOW`
+      }
+      return acc;
+    },{});
+    return data.wearables.map((wearable)=>{
+      return {
+        ...wearable,
+        cost: costMap[wearable.wearable_id]
+      };
+    })
   }, shallowEqual)
 
   const { ref, inView } = useInView({
@@ -56,7 +76,7 @@ function DoodleCard({doop}) {
 
   async function fetchAssets() {
     const data = await cacheFetch.fetch(
-      `https://doopmarketeer-api.vercel.app/assets/${doop.tokenId}`,
+      `${API_URL}/assets/${doop.tokenId}`,
       {mode:'cors'}
     )
     dispatch({
@@ -101,6 +121,9 @@ function DoodleCard({doop}) {
                   <Link fontWeight='bold' color='#746566' href={`/?address=${doop.from}`}>
                     {doop.from.substring(0, 4) + "..." + doop.from.substring(doop.from.length - 4)}
                   </Link>
+                </Skeleton>
+                <Skeleton height='22px' isLoaded={avatarLoaded}>
+                  <Text>Total ${totalCost}</Text>
                 </Skeleton>
             </Stack>
           </Box>
