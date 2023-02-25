@@ -21,6 +21,7 @@ function DoopFeed({item}) {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const [loadingMore, setLoadingMore] = useState(false)
+  const address = useSelector((state)=>state.app.address)
   const feed = useSelector((state)=>state.app.feed, shallowEqual)
   const latestBlockNumber = useSelector((state)=>{
     let blockNumber = 0;
@@ -32,7 +33,7 @@ function DoopFeed({item}) {
 
   const [page, setPage] = useState(1)
 
-  const fetchAssets = async ()=> {
+  const fetchHistory = async ()=> {
     setLoading(true)
     await setPage(1)
     const data = await cacheFetch.fetch(
@@ -74,8 +75,10 @@ function DoopFeed({item}) {
   }
 
   useEffect(() => {
-    fetchAssets()
-  },[])
+    if(address === '') {
+      fetchHistory()
+    }
+  },[address])
   useEffect(() => {
     const feedInterval = setInterval(checkFeed, 20000);
     return () => clearInterval(feedInterval);

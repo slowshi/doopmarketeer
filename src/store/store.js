@@ -4,6 +4,7 @@ import rootReducer from './reducers/rootReducer';
 const store = createStore(rootReducer,
 {
   app: {
+    address: '',
     dooplications: [],
     assets: {},
     leaderboard: [],

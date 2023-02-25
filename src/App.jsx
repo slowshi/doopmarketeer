@@ -31,16 +31,17 @@ import StatsCard from './components/StatsCard/StatsCard'
 import DoopFeed from './components/DoopFeed/DoopFeed'
 import LeaderboardCard from './components/LeaderboardCard/LeaderboardCard'
 import { API_URL } from './utils/constants'
+import Dooplications from './components/Dooplications/Dooplications'
 function App() {
   const dispatch = useDispatch()
 
-  const [address, setInput] = useState('')
+  const [input, setInput] = useState('')
   const [searchParamsAddress, setSearchParamsAddress] = useState('')
   const [loading, setLoading] = useBoolean()
   const [stats, setStats] = useBoolean()
   const [leaderboard, setLeaderboard] = useBoolean()
-
   const dooplications = useSelector((state)=>state.app.dooplications, shallowEqual)
+  const submittedAddress = useSelector((state)=>state.app.address)
 
   useEffect(() => {
     loadAddress()
@@ -50,8 +51,12 @@ function App() {
         const address = searchParams.get('address')
         setLoading.on()
         setInput(address)
+        dispatch({
+          type: 'setAddress',
+          payload: address
+        })
         setSearchParamsAddress(address)
-        fetchDoops(address)
+        // fetchDoops(address)
       }
     }
 
@@ -73,43 +78,30 @@ function App() {
   const handleSearchAddress = async (e) => {
     e.preventDefault()
     e.stopPropagation()
-    if(address === '') return
+    if(input === '') return
+
+    dispatch({
+      type: 'setAddress',
+      payload: input
+    })
+
     dispatch({
       type: 'setDooplications',
       payload: []
     })
+
     setLoading.on()
     const searchParams = new URLSearchParams({
-      address
+      address: input
     })
     const url = `?${searchParams}`
-    if(searchParamsAddress === address) {
+    if(searchParamsAddress === input) {
       window.history.replaceState(null, null, url)
     } else {
       window.history.pushState(null, null, url)
     }
-    fetchDoops(address)
   }
 
-  const fetchDoops = async (address) => {
-    const data = await cacheFetch.fetch(
-      `${API_URL}/doops?address=${address}`,
-      {mode:'cors'}
-    )
-    dispatch({
-      type: 'setDooplications',
-      payload: data
-    })
-    const totalCost = data.reduce((acc, item)=>{
-      const value = typeof acc === 'undefined' ? 0 : Number(acc)
-      acc = value + Number(item.value)
-      return acc
-    }, 0)
-    setLoading.off()
-  }
-  const navGithub = () => {
-
-  }
   const isError = false
   return (
     <Container height='full' maxW='container.lg' centerContent>
@@ -144,7 +136,7 @@ function App() {
         <FormControl isInvalid={isError} mb="2">
           <FormLabel color="white">Ethereum Address</FormLabel>
           <InputGroup>
-            <Input backgroundColor="white" type="text" value={address} name="address" onChange={handleInputChange} />
+            <Input backgroundColor="white" type="text" value={input} name="address" onChange={handleInputChange} />
             <InputRightElement>
               <IconButton
                 color='white'
@@ -162,27 +154,17 @@ function App() {
           <FormHelperText color='white' fontSize='xs'>* Not affiliated with Doodles.</FormHelperText>
         </FormControl>
       </form>
-      {dooplications.length > 0 && loading === false ?
+      {submittedAddress !== '' ?
         <ButtonGroup gap='4' mb='2'>
           <Button colorScheme={stats ? 'whiteAlpha' : 'blackAlpha'} onClick={setStats.off}>History</Button>
           <Button colorScheme={!stats ? 'whiteAlpha' : 'blackAlpha'} onClick={setStats.on}>Stats</Button>
-        </ButtonGroup> : ''}
-      {dooplications.length == 0 && loading === false ?
+        </ButtonGroup> :
         <ButtonGroup gap='4' mb='2'>
           <Button colorScheme={leaderboard ? 'whiteAlpha' : 'blackAlpha'} onClick={setLeaderboard.off}>Feed</Button>
           <Button colorScheme={!leaderboard ? 'whiteAlpha' : 'blackAlpha'} onClick={setLeaderboard.on}>Leaderboard</Button>
-        </ButtonGroup> : ''}
-      {loading === true ?
-        <Center mt='4'>
-          <Spinner
-            thickness='4px'
-            speed='0.65s'
-            emptyColor='gray.300'
-            color='white'
-            size='xl'
-          />
-        </Center>
-      : dooplications.length === 0 ?
+        </ButtonGroup>
+      }
+      {submittedAddress === '' ?
         <Box w='full' overflowY='scroll' mb='4'>
           {!leaderboard ?
           <DoopFeed/>
@@ -191,14 +173,14 @@ function App() {
           }
         </Box>
         :
-        !stats ?
-        <Stack w='full' spacing='4' overflowY="auto" mb='4'>
-          {dooplications.map((doop, index)=>
-            <DoodleCard key={doop.tokenId} doop={doop}></DoodleCard>
-          )}
-        </Stack>
-        :
-        <StatsCard/>
+        <Box w='full' overflowY='scroll' mb='4'>
+          {
+            !stats ?
+            <Dooplications/>
+            :
+            <StatsCard/>
+          }
+        </Box>
       }
     </Container>
   )

@@ -1,4 +1,5 @@
 const initialState = Object.freeze({
+  address: '',
   dooplications: [],
   assets: {},
   leaderboard: [],
@@ -8,6 +9,11 @@ const initialState = Object.freeze({
 
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'setAddress':
+      return {
+        ...state,
+        address: action.payload
+      }
     case "setDooplications":
       return {
         ...state,
