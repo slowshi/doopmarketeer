@@ -1,4 +1,6 @@
 const initialState = Object.freeze({
+  ethPrice: 0,
+  flowPrice: 0,
   address: '',
   dooplications: [],
   assets: {},
@@ -9,6 +11,16 @@ const initialState = Object.freeze({
 
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'setEthPrice':
+      return {
+        ...state,
+        ethPrice: action.payload
+      }
+    case 'setFlowPrice':
+      return {
+        ...state,
+        flowPrice: action.payload
+      }
     case 'setAddress':
       return {
         ...state,

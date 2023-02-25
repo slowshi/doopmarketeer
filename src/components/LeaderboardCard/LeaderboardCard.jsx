@@ -18,7 +18,7 @@ import { API_URL } from '../../utils/constants'
 function LeaderboardCard({item}) {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
-
+  const totalDoopers = useSelector((state)=>state.app.leaderboard.length);
   const leaderboardSelector = (state)=> {
     const leaderboardSort = state.app.leaderboardSort;
     const data = state.app.leaderboard.map((user)=>{
@@ -81,28 +81,31 @@ function LeaderboardCard({item}) {
           />
         </Center>
         :
-        <Card w='full'>
-          <CardBody>
-            <Stack w='full'>
-            <Box w='full' display='flex' justifyContent='space-between'>
-              <Text fontSize={fontSize} flex='2'>Address</Text>
-              <Link fontWeight='bold' color='#746566' fontSize={fontSize} flex='1' onClick={()=>sortLeaderboard('dooplicate')}>Doop</Link>
-              <Link fontWeight='bold' color='#746566' fontSize={fontSize} flex='1' onClick={()=>sortLeaderboard('dooplicateItem')}>Market</Link>
-              <Link fontWeight='bold' color='#746566' fontSize={fontSize} flex='1' onClick={()=>sortLeaderboard('totalDoops')}>Total</Link>
-              <Link fontWeight='bold' color='#746566' fontSize={fontSize} flex='1' onClick={()=>sortLeaderboard('value')}>Volume</Link>
-            </Box>
-            {leaderboard.map((user)=>
-              <Box key={user.address} w='full' display='flex' justifyContent='space-between'>
-                <Link fontWeight='bold' color='#746566' fontSize={fontSize} flex='2' href={`/?address=${user.address}`}>{user.shortAddress}</Link>
-                <Text fontSize={fontSize} flex='1'>{user.dooplicate}</Text>
-                <Text fontSize={fontSize} flex='1'>{user.dooplicateItem}</Text>
-                <Text fontSize={fontSize} flex='1'>{user.totalDoops}</Text>
-                <Text fontSize={fontSize} flex='1'>{`${Math.round(user.value / 10e17 * 100) / 100} Ξ`}</Text>
+        <Stack w='full'>
+          <Text color='white'>Total Doopers: {totalDoopers}</Text>
+          <Card w='full'>
+            <CardBody>
+              <Stack w='full'>
+              <Box w='full' display='flex' justifyContent='space-between'>
+                <Text fontSize={fontSize} flex='2'>Address</Text>
+                <Link fontWeight='bold' color='#746566' fontSize={fontSize} flex='1' onClick={()=>sortLeaderboard('dooplicate')}>Doop</Link>
+                <Link fontWeight='bold' color='#746566' fontSize={fontSize} flex='1' onClick={()=>sortLeaderboard('dooplicateItem')}>Market</Link>
+                <Link fontWeight='bold' color='#746566' fontSize={fontSize} flex='1' onClick={()=>sortLeaderboard('totalDoops')}>Total</Link>
+                <Link fontWeight='bold' color='#746566' fontSize={fontSize} flex='1' onClick={()=>sortLeaderboard('value')}>Volume</Link>
               </Box>
-            )}
-            </Stack>
-          </CardBody>
-        </Card>
+              {leaderboard.map((user)=>
+                <Box key={user.address} w='full' display='flex' justifyContent='space-between'>
+                  <Link fontWeight='bold' color='#746566' fontSize={fontSize} flex='2' href={`/?address=${user.address}`}>{user.shortAddress}</Link>
+                  <Text fontSize={fontSize} flex='1'>{user.dooplicate}</Text>
+                  <Text fontSize={fontSize} flex='1'>{user.dooplicateItem}</Text>
+                  <Text fontSize={fontSize} flex='1'>{user.totalDoops}</Text>
+                  <Text fontSize={fontSize} flex='1'>{`${Math.round(user.value / 10e17 * 100) / 100} Ξ`}</Text>
+                </Box>
+              )}
+              </Stack>
+            </CardBody>
+          </Card>
+        </Stack>
       }
     </Stack>
   )

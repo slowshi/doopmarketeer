@@ -32,10 +32,10 @@ class CacheService {
   }
 }
 
-const cacheServiceInstance = new CacheService();
+const cacheService = new CacheService();
 
 export {
-  cacheServiceInstance
+  cacheService
 }
 
 

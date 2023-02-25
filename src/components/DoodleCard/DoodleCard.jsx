@@ -19,7 +19,7 @@ import WearbleImage from "../WearableImage/WearableImage"
 import { useInView } from "react-intersection-observer"
 import {cacheFetch} from '../../utils/cacheFetch'
 import {useSelector, useDispatch, shallowEqual} from "react-redux"
-import { API_URL } from '../../utils/constants'
+import { API_URL, currencyMap } from '../../utils/constants'
 
 function DoodleCard({doop}) {
   const dispatch = useDispatch()
@@ -46,13 +46,28 @@ function DoodleCard({doop}) {
     },0)
   }, shallowEqual);
 
+  const totalCostETH = useSelector((state)=>{
+    const data = state.app.assets[doop.tokenId]
+    if(typeof data === 'undefined') return 0;
+    const total = data.costs.reduce((acc, cost)=>{
+      return acc + cost.activeListing.price;
+    },0);
+
+    return total / state.app.ethPrice;
+  }, shallowEqual);
+
   const wearables = useSelector((state)=>{
     const data = state.app.assets[doop.tokenId]
+    const flowPrice = state.app.flowPrice;
     if(typeof data === 'undefined') return []
     const costMap = data.costs.reduce((acc, cost)=>{
+      let price = cost.activeListing.price;
+      if(cost.activeListing?.vaultType !== 'A.ead892083b3e2c6c.DapperUtilityCoin.Vault') {
+        price = price / flowPrice;
+      }
       acc = {
         ...acc,
-        [cost.editionID]: cost.activeListing?.vaultType === 'A.ead892083b3e2c6c.DapperUtilityCoin.Vault' ? `$${cost.activeListing.price}` : `${cost.activeListing.price} FLOW`
+        [cost.editionID]: price.toLocaleString(undefined, currencyMap.usd.toLocaleString)
       }
       return acc;
     },{});
@@ -111,7 +126,7 @@ function DoodleCard({doop}) {
             <Stack h='100' justifyContent='space-evenly'>
                 <Skeleton height='22px' isLoaded={avatarLoaded}>
                   <Text>
-                    {doop.functionName === 'dooplicateItem'? `DoopMarket - ${doop.value / 10e17} Ξ`:'Dooplicator'}
+                    {doop.functionName === 'dooplicateItem'? `DoopMarket - ${Number(doop.value / 10e17).toLocaleString(undefined, currencyMap.eth.toLocaleString)} Ξ`:'Dooplicator'}
                   </Text>
                 </Skeleton>
                 <Skeleton height='22px' isLoaded={avatarLoaded}>
@@ -123,7 +138,7 @@ function DoodleCard({doop}) {
                   </Link>
                 </Skeleton>
                 <Skeleton height='22px' isLoaded={avatarLoaded}>
-                  <Text>Total ${totalCost}</Text>
+                  <Text>Total {totalCost.toLocaleString(undefined, currencyMap.usd.toLocaleString)} | {`${totalCostETH.toLocaleString(undefined, currencyMap.eth.toLocaleString)} Ξ`}</Text>
                 </Skeleton>
             </Stack>
           </Box>

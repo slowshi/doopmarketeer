@@ -32,6 +32,7 @@ import DoopFeed from './components/DoopFeed/DoopFeed'
 import LeaderboardCard from './components/LeaderboardCard/LeaderboardCard'
 import { API_URL } from './utils/constants'
 import Dooplications from './components/Dooplications/Dooplications'
+import { cacheEthers } from './utils/cacheEthers'
 function App() {
   const dispatch = useDispatch()
 
@@ -45,6 +46,8 @@ function App() {
 
   useEffect(() => {
     loadAddress()
+    loadCurrencies()
+
     function loadAddress() {
       const searchParams = (new URL(document.location)).searchParams
       if(searchParams.has('address')) {
@@ -56,7 +59,6 @@ function App() {
           payload: address
         })
         setSearchParamsAddress(address)
-        // fetchDoops(address)
       }
     }
 
@@ -70,6 +72,19 @@ function App() {
       window.removeEventListener("popstate", handlePopstate)
     }
   }, [])
+
+  const loadCurrencies = async () => {
+    const eth = await cacheEthers.getCurrencyConversion('eth')
+    const flow = await cacheEthers.getCurrencyConversion('flow')
+    dispatch({
+      type: 'setEthPrice',
+      payload: eth
+    })
+    dispatch({
+      type: 'setFlowPrice',
+      payload: flow
+    })
+  }
 
   const handleInputChange = (e) => {
     setInput(e.target.value)
@@ -101,7 +116,7 @@ function App() {
       window.history.pushState(null, null, url)
     }
   }
-
+  //this doesn't work
   const isError = false
   return (
     <Container height='full' maxW='container.lg' centerContent>
