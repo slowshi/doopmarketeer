@@ -1,7 +1,7 @@
 #root {
   width: 100vw;
-  height: 100vh;
-  background-color: rgb(173, 153, 153);
+  min-height: 100vh;
+  background-color: #ad9999;
   font-family: Chalkboard SE,sans-serif;
 }
 

@@ -37,6 +37,7 @@ const marketTabs = {
   LEADERBOARD: 'leaderboard',
   FEED: 'feed',
   DOOPMARKET: 'doopmarket',
+  SEARCH: 'search'
 }
 export {
   API_URL,

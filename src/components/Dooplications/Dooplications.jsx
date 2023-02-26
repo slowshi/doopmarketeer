@@ -9,8 +9,7 @@ import {
   Center,
   Heading,
   Button,
-  useBreakpointValue,
-  useBoolean
+  useBreakpointValue
 } from "@chakra-ui/react"
 import { useState, useEffect } from 'react'
 import {useSelector, useDispatch, shallowEqual} from "react-redux"
@@ -20,15 +19,14 @@ import { API_URL } from '../../utils/constants'
 
 function Dooplications() {
   const dispatch = useDispatch()
-  const [loading, setLoading] = useBoolean()
   const [loadingMore, setLoadingMore] = useState(false)
   const [page, setPage] = useState(1)
+  const loading = useSelector((state)=>state.app.searchLoading)
   const dooplications = useSelector((state)=>{
     return state.app.dooplications.slice(0, page * 5)
   }, shallowEqual)
   const address = useSelector((state)=>state.app.address)
   const fetchDoops = async () => {
-    setLoading.on()
     const data = await cacheFetch.fetch(
       `${API_URL}/doops?address=${address}`,
       {mode:'cors'}
@@ -37,7 +35,10 @@ function Dooplications() {
       type: 'setDooplications',
       payload: data
     })
-    setLoading.off()
+    dispatch({
+      type: 'setSearchLoading',
+      payload: false
+    })
   }
 
   const loadMore =  async() => {
@@ -45,34 +46,23 @@ function Dooplications() {
   }
 
   useEffect(() => {
-    if(address !== '') {
+    if(loading) {
       fetchDoops()
     }
-  },[address])
+  },[loading])
 
   return (
-    <Stack w='full'>
-      {loading === true ?
-        <Center mt='4'>
-          <Spinner
-            thickness='4px'
-            speed='0.65s'
-            emptyColor='gray.300'
-            color='white'
-            size='xl'
-          />
+    <Stack w='full' spacing='4'>
+      {dooplications.map((doop, index)=>
+        <DoodleCard key={doop.tokenId} doop={doop}></DoodleCard>
+      )}
+      {
+        dooplications.length > 0 ?
+        <Center>
+          <Button colorScheme='whiteAlpha' onClick={loadMore}>Load More</Button>
         </Center>
-        :
-        <Stack w='full' spacing='4'>
-          {dooplications.map((doop, index)=>
-            <DoodleCard key={doop.tokenId} doop={doop}></DoodleCard>
-          )}
-          <Center>
-            <Button colorScheme='whiteAlpha' onClick={loadMore}>Load More</Button>
-          </Center>
-        </Stack>
+        : ''
       }
-
     </Stack>
   )
 }

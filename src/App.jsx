@@ -26,14 +26,17 @@ import { useState, useEffect } from 'react'
 import {useSelector, useDispatch, shallowEqual} from "react-redux"
 import {FaGithub, FaTwitter, FaSearch} from 'react-icons/fa'
 import {cacheFetch} from './utils/cacheFetch'
-import DoodleCard from './components/DoodleCard/DoodleCard'
 import StatsCard from './components/StatsCard/StatsCard'
-import DoopFeed from './components/DoopFeed/DoopFeed'
-import LeaderboardCard from './components/LeaderboardCard/LeaderboardCard'
+import DoopFeed from './routes/DoopFeed/DoopFeed'
+import Search from './routes/Search/Search'
+import LeaderboardCard from './routes/LeaderboardCard/LeaderboardCard'
+import DoopMarket from './routes/DoopMarket/DoopMarket'
+import Nav from './components/Nav/Nav'
 import { API_URL, marketTabs } from './utils/constants'
 import Dooplications from './components/Dooplications/Dooplications'
 import { cacheEthers } from './utils/cacheEthers'
-import DoopMarket from './components/DoopMarket/DoopMarket'
+import { Router, Link as ReachLink, navigate } from '@reach/router'
+
 function App() {
   const dispatch = useDispatch()
 
@@ -47,35 +50,7 @@ function App() {
   const activeMarketTab = useSelector((state)=>state.app.activeMarketTab)
 
   useEffect(() => {
-    loadAddress()
     loadCurrencies()
-    dispatch({
-      type: 'setActiveMarketTab',
-      payload: marketTabs.FEED
-    })
-    function loadAddress() {
-      const searchParams = (new URL(document.location)).searchParams
-      if(searchParams.has('address')) {
-        const address = searchParams.get('address')
-        setLoading.on()
-        setInput(address)
-        dispatch({
-          type: 'setAddress',
-          payload: address
-        })
-        setSearchParamsAddress(address)
-      }
-    }
-
-    function handlePopstate() {
-      loadAddress()
-    }
-
-    window.addEventListener("popstate", handlePopstate)
-
-    return () => {
-      window.removeEventListener("popstate", handlePopstate)
-    }
   }, [])
 
   const loadCurrencies = async () => {
@@ -91,131 +66,15 @@ function App() {
     })
   }
 
-  const handleInputChange = (e) => {
-    setInput(e.target.value)
-  }
-
-  const handleSearchAddress = async (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    if(input === '') return
-
-    dispatch({
-      type: 'setAddress',
-      payload: input
-    })
-
-    dispatch({
-      type: 'setDooplications',
-      payload: []
-    })
-
-    setLoading.on()
-    const searchParams = new URLSearchParams({
-      address: input
-    })
-    const url = `?${searchParams}`
-    if(searchParamsAddress === input) {
-      window.history.replaceState(null, null, url)
-    } else {
-      window.history.pushState(null, null, url)
-    }
-  }
-  const setActiveTab = (tab)=> {
-    dispatch({
-      type: 'setActiveMarketTab',
-      payload: tab
-    })
-  }
   //this doesn't work
   const isError = false
   return (
-    <Container height='full' maxW='container.lg' centerContent>
-      <Grid mt='2' templateColumns="repeat(3, 1fr)" gap={2} alignItems="center"  w='full'>
-        <GridItem colSpan={1}>
-          <Link href='https://twitter.com/slowshi' isExternal>
-            <IconButton
-              colorScheme='white'
-              aria-label="Twitter"
-              icon={<FaTwitter/>}
-              size="md"
-            />
-          </Link>
-        </GridItem>
-        <GridItem colSpan={1} justifySelf="center">
-          <Link href='/' color='white' _hover={{textDecoration: 'none'}}>
-            <Heading color='white' fontFamily='Chalkboard SE,sans-serif'>Doopmarketeer</Heading>
-          </Link>
-        </GridItem>
-        <GridItem colSpan={1} justifySelf="end">
-          <Link href='https://github.com/slowshi/doopmarketeer' isExternal>
-            <IconButton
-              colorScheme='white'
-              aria-label="Github"
-              icon={<FaGithub/>}
-              size="md"
-            />
-          </Link>
-        </GridItem>
-      </Grid>
-      <form className="w-100" onSubmit={handleSearchAddress}>
-        <FormControl isInvalid={isError} mb="2">
-          <FormLabel color="white">Ethereum Address</FormLabel>
-          <InputGroup>
-            <Input backgroundColor="white" type="text" value={input} name="address" onChange={handleInputChange} />
-            <InputRightElement>
-              <IconButton
-                color='white'
-                backgroundColor='#f2e7ea'
-                aria-label="Twitter"
-                icon={<FaSearch/>}
-                size="md"
-                onClick={handleSearchAddress}
-              />
-            </InputRightElement>
-          </InputGroup>
-          {isError ? (
-            <FormErrorMessage>Ethereum Address required.</FormErrorMessage>
-          ) : ('')}
-          <FormHelperText color='white' fontSize='xs'>* Not affiliated with Doodles.</FormHelperText>
-        </FormControl>
-      </form>
-      {submittedAddress !== '' ?
-        <ButtonGroup gap='4' mb='2'>
-          <Button colorScheme={stats ? 'whiteAlpha' : 'blackAlpha'} onClick={setStats.off}>History</Button>
-          <Button colorScheme={!stats ? 'whiteAlpha' : 'blackAlpha'} onClick={setStats.on}>Stats</Button>
-        </ButtonGroup> :
-        <ButtonGroup gap='4' mb='2'>
-          <Button colorScheme={activeMarketTab ===  marketTabs.FEED ? 'blackAlpha' : 'whiteAlpha'}
-          onClick={()=>setActiveTab(marketTabs.FEED)}>Feed</Button>
-          <Button colorScheme={activeMarketTab ===  marketTabs.DOOPMARKET ? 'blackAlpha' : 'whiteAlpha'}
-          onClick={()=>setActiveTab(marketTabs.DOOPMARKET)}>DoopMarket</Button>
-          <Button colorScheme={activeMarketTab ===  marketTabs.LEADERBOARD ? 'blackAlpha' : 'whiteAlpha'}
-          onClick={()=>setActiveTab(marketTabs.LEADERBOARD)}>Leaderboard</Button>
-        </ButtonGroup>
-      }
-      {submittedAddress === '' ?
-        <Box w='full' overflowY='scroll' mb='4'>
-          {
-            {
-              [marketTabs.FEED]: <DoopFeed />,
-              [marketTabs.DOOPMARKET]: <DoopMarket />,
-              [marketTabs.LEADERBOARD]: <LeaderboardCard />,
-              '': ''
-            }[activeMarketTab]
-          }
-        </Box>
-        :
-        <Box w='full' overflowY='scroll' mb='4'>
-          {
-            !stats ?
-            <Dooplications/>
-            :
-            <StatsCard/>
-          }
-        </Box>
-      }
-    </Container>
+    <Router>
+      <DoopFeed path='/'/>
+      <DoopMarket path='/doopmarket'/>
+      <LeaderboardCard path='/leaderboard'/>
+      <Search path='/search'/>
+    </Router>
   )
 }
 

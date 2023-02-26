@@ -2,6 +2,7 @@ const initialState = Object.freeze({
   ethPrice: 0,
   flowPrice: 0,
   address: '',
+  searchLoading: true,
   dooplications: [],
   doopMarket: [],
   assets: {},
@@ -27,6 +28,11 @@ const appReducer = (state = initialState, action) => {
       return {
         ...state,
         flowPrice: action.payload
+      }
+    case 'setSearchLoading':
+      return {
+        ...state,
+        searchLoading: action.payload
       }
     case 'setAddress':
       return {

@@ -9,14 +9,16 @@ import {
   Center,
   Heading,
   Button,
+  Container,
   useBreakpointValue
 } from "@chakra-ui/react"
 import { useState, useEffect } from 'react'
 import {useSelector, useDispatch, shallowEqual} from "react-redux"
 import {cacheFetch} from '../../utils/cacheFetch'
-import DoodleCard from "../DoodleCard/DoodleCard"
+import Nav from '../../components/Nav/Nav'
+import DoodleCard from "../../components/DoodleCard/DoodleCard"
 import { API_URL, marketTabs } from '../../utils/constants'
-
+import ScrollToTop from "../../components/ScrollToTop/ScrollToTop"
 function DoopFeed({item}) {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
@@ -77,38 +79,48 @@ function DoopFeed({item}) {
   }
 
   useEffect(() => {
-    if(activeMarketTab === marketTabs.FEED) {
-      fetchHistory()
-    }
-  },[activeMarketTab])
+    dispatch({
+      type: 'setActiveMarketTab',
+      payload: marketTabs.FEED
+    })
+    fetchHistory()
+  },[])
   useEffect(() => {
     const feedInterval = setInterval(checkFeed, 20000);
     return () => clearInterval(feedInterval);
   },[latestBlockNumber])
   return (
-    <Stack w='full'>
-      {loading === true ?
-        <Center mt='4'>
-          <Spinner
-            thickness='4px'
-            speed='0.65s'
-            emptyColor='gray.300'
-            color='white'
-            size='xl'
-          />
-        </Center>
-        :
-        <Stack w='full' spacing='4'>
-          {feed.map((doop, index)=>
-            <DoodleCard key={doop.tokenId} doop={doop}></DoodleCard>
-          )}
-          <Center>
-            <Button isLoading={loadingMore} colorScheme='whiteAlpha' onClick={loadMore}>Load More</Button>
-          </Center>
+    <>
+      <ScrollToTop/>
+      <Box zIndex='10000' w='100' position='sticky' bg='#ad9999' top='0'>
+        <Nav/>
+      </Box>
+      <Container maxW='container.lg'>
+        <Stack w='full' paddingBottom='8'>
+          {loading === true ?
+            <Center mt='4'>
+              <Spinner
+                thickness='4px'
+                speed='0.65s'
+                emptyColor='gray.300'
+                color='white'
+                size='xl'
+              />
+            </Center>
+            :
+            <Stack w='full' spacing='4'>
+              {feed.map((doop, index)=>
+                <DoodleCard key={doop.tokenId} doop={doop}></DoodleCard>
+              )}
+              <Center>
+                <Button isLoading={loadingMore} colorScheme='whiteAlpha' onClick={loadMore}>Load More</Button>
+              </Center>
+            </Stack>
+          }
         </Stack>
-      }
-
-    </Stack>
+        <Text w='full' bg='#ad9999' textAlign='right' position='fixed' bottom='0' right='0' color='white' fontSize='xs'>* Not affiliated with Doodles.</Text>
+      </Container>
+    </>
   )
 }
 
