@@ -33,9 +33,14 @@ const currencyMap = {
   }
 }
 
-
+const marketTabs = {
+  LEADERBOARD: 'leaderboard',
+  FEED: 'feed',
+  DOOPMARKET: 'doopmarket',
+}
 export {
   API_URL,
   ETH_RPC_URL,
-  currencyMap
+  currencyMap,
+  marketTabs
 }

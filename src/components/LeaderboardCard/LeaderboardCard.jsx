@@ -13,12 +13,14 @@ import {
 import { useState, useEffect } from 'react'
 import {useSelector, useDispatch, shallowEqual} from "react-redux"
 import {cacheFetch} from '../../utils/cacheFetch'
-import { API_URL } from '../../utils/constants'
+import { API_URL, marketTabs,} from '../../utils/constants'
 
 function LeaderboardCard({item}) {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const totalDoopers = useSelector((state)=>state.app.leaderboard.length);
+  const activeMarketTab = useSelector((state)=>state.app.activeMarketTab)
+
   const leaderboardSelector = (state)=> {
     const leaderboardSort = state.app.leaderboardSort;
     const data = state.app.leaderboard.map((user)=>{
@@ -64,8 +66,10 @@ function LeaderboardCard({item}) {
   }
 
   useEffect(() => {
-    fetchAssets()
-  }, [])
+    if(activeMarketTab === marketTabs.LEADERBOARD) {
+      fetchAssets()
+    }
+  }, [activeMarketTab])
   const fontSize = useBreakpointValue({ base: "sm", sm: "md" });
 
   return (

@@ -3,14 +3,21 @@ const initialState = Object.freeze({
   flowPrice: 0,
   address: '',
   dooplications: [],
+  doopMarket: [],
   assets: {},
   leaderboard: [],
   feed: [],
+  activeMarketTab: '',
   leaderboardSort: 'totalDoops'
 })
 
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'setActiveMarketTab':
+      return {
+        ...state,
+        activeMarketTab: action.payload
+      }
     case 'setEthPrice':
       return {
         ...state,
@@ -25,6 +32,11 @@ const appReducer = (state = initialState, action) => {
       return {
         ...state,
         address: action.payload
+      }
+    case "setDoopMarket":
+      return {
+        ...state,
+        doopMarket: [...action.payload]
       }
     case "setDooplications":
       return {

@@ -8,9 +8,11 @@ const store = createStore(rootReducer,
     flowPrice: 0,
     address: '',
     dooplications: [],
+    doopMarket: [],
     assets: {},
     leaderboard: [],
     feed: [],
+    activeMarketTab: '',
     leaderboardSort: 'totalDoops'
   }
 });

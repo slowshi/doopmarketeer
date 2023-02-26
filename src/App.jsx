@@ -30,9 +30,10 @@ import DoodleCard from './components/DoodleCard/DoodleCard'
 import StatsCard from './components/StatsCard/StatsCard'
 import DoopFeed from './components/DoopFeed/DoopFeed'
 import LeaderboardCard from './components/LeaderboardCard/LeaderboardCard'
-import { API_URL } from './utils/constants'
+import { API_URL, marketTabs } from './utils/constants'
 import Dooplications from './components/Dooplications/Dooplications'
 import { cacheEthers } from './utils/cacheEthers'
+import DoopMarket from './components/DoopMarket/DoopMarket'
 function App() {
   const dispatch = useDispatch()
 
@@ -43,11 +44,15 @@ function App() {
   const [leaderboard, setLeaderboard] = useBoolean()
   const dooplications = useSelector((state)=>state.app.dooplications, shallowEqual)
   const submittedAddress = useSelector((state)=>state.app.address)
+  const activeMarketTab = useSelector((state)=>state.app.activeMarketTab)
 
   useEffect(() => {
     loadAddress()
     loadCurrencies()
-
+    dispatch({
+      type: 'setActiveMarketTab',
+      payload: marketTabs.FEED
+    })
     function loadAddress() {
       const searchParams = (new URL(document.location)).searchParams
       if(searchParams.has('address')) {
@@ -116,6 +121,12 @@ function App() {
       window.history.pushState(null, null, url)
     }
   }
+  const setActiveTab = (tab)=> {
+    dispatch({
+      type: 'setActiveMarketTab',
+      payload: tab
+    })
+  }
   //this doesn't work
   const isError = false
   return (
@@ -175,16 +186,23 @@ function App() {
           <Button colorScheme={!stats ? 'whiteAlpha' : 'blackAlpha'} onClick={setStats.on}>Stats</Button>
         </ButtonGroup> :
         <ButtonGroup gap='4' mb='2'>
-          <Button colorScheme={leaderboard ? 'whiteAlpha' : 'blackAlpha'} onClick={setLeaderboard.off}>Feed</Button>
-          <Button colorScheme={!leaderboard ? 'whiteAlpha' : 'blackAlpha'} onClick={setLeaderboard.on}>Leaderboard</Button>
+          <Button colorScheme={activeMarketTab ===  marketTabs.FEED ? 'blackAlpha' : 'whiteAlpha'}
+          onClick={()=>setActiveTab(marketTabs.FEED)}>Feed</Button>
+          <Button colorScheme={activeMarketTab ===  marketTabs.DOOPMARKET ? 'blackAlpha' : 'whiteAlpha'}
+          onClick={()=>setActiveTab(marketTabs.DOOPMARKET)}>DoopMarket</Button>
+          <Button colorScheme={activeMarketTab ===  marketTabs.LEADERBOARD ? 'blackAlpha' : 'whiteAlpha'}
+          onClick={()=>setActiveTab(marketTabs.LEADERBOARD)}>Leaderboard</Button>
         </ButtonGroup>
       }
       {submittedAddress === '' ?
         <Box w='full' overflowY='scroll' mb='4'>
-          {!leaderboard ?
-          <DoopFeed/>
-          :
-          <LeaderboardCard/>
+          {
+            {
+              [marketTabs.FEED]: <DoopFeed />,
+              [marketTabs.DOOPMARKET]: <DoopMarket />,
+              [marketTabs.LEADERBOARD]: <LeaderboardCard />,
+              '': ''
+            }[activeMarketTab]
           }
         </Box>
         :
