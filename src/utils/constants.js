@@ -1,6 +1,6 @@
 // environment variables eventually
-const API_URL = 'https://doopmarketeer-api.vercel.app';
-// const API_URL = 'http://localhost:8000'
+// const API_URL = 'https://doopmarketeer-api.vercel.app';
+const API_URL = 'http://localhost:8000'
 const ETH_RPC_URL = 'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
 const currencyMap = {
   usd: {

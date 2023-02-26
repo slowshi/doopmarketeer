@@ -16,7 +16,7 @@ function WearbleImage({item}) {
   return (
     <Box>
       <Skeleton rounded='xl' w='90px' h='90px' isLoaded={loaded}>
-        <Image backgroundColor='#f2e7ea' w='90px' rounded='xl' src={item.image_uri} onLoad={setLoaded}></Image>
+        <Image backgroundColor='#f2e7ea' w='90px' opacity={item.hidden ? '45%' : '100%'} rounded='xl' src={item.image_uri} onLoad={setLoaded}></Image>
       </Skeleton>
       <Text textAlign="center">{item?.cost}</Text>
     </Box>
