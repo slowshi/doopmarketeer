@@ -34,7 +34,7 @@ import Nav from './components/Nav/Nav'
 import { API_URL, marketTabs } from './utils/constants'
 import Dooplications from './components/Dooplications/Dooplications'
 import { cacheEthers } from './utils/cacheEthers'
-import { Router, Link as ReachLink, navigate } from '@reach/router'
+import { Router, Link as ReachLink, navigate, globalHistory } from '@reach/router'
 
 function App() {
   const dispatch = useDispatch()
@@ -46,6 +46,12 @@ function App() {
 
   useEffect(() => {
     loadCurrencies()
+    const listener = globalHistory.listen(({ location }) => {
+      window.gtag('config', 'GA_MEASUREMENT_ID', {'page_path': pathname + search});
+    });
+    return () => {
+      listener();
+    }
   }, [])
 
   const loadCurrencies = async () => {
