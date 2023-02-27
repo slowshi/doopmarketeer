@@ -65,6 +65,8 @@ function Search() {
   const isError = false;
 
   useEffect(() => {
+    document.title = 'Doopmarketeer | Search'
+
     dispatch({
       type: 'setActiveMarketTab',
       payload: marketTabs.SEARCH

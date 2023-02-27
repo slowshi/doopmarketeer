@@ -90,6 +90,7 @@ function DoopMarket({item}) {
   }
 
   useEffect(() => {
+    document.title = 'Doopmarketeer | Market'
     dispatch({
       type: 'setActiveMarketTab',
       payload: marketTabs.DOOPMARKET

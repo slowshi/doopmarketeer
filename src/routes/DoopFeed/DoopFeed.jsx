@@ -78,12 +78,14 @@ function DoopFeed({item}) {
   }
 
   useEffect(() => {
+    document.title = 'Doopmarketeer | Feed'
     dispatch({
       type: 'setActiveMarketTab',
       payload: marketTabs.FEED
     })
     fetchHistory()
   },[])
+
   useEffect(() => {
     const feedInterval = setInterval(checkFeed, 20000);
     return () => clearInterval(feedInterval);

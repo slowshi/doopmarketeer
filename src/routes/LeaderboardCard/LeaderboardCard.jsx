@@ -86,6 +86,7 @@ function LeaderboardCard({item}) {
   }
 
   useEffect(() => {
+    document.title = 'Doopmarketeer | Leaderboard'
     dispatch({
       type: 'setActiveMarketTab',
       payload: marketTabs.LEADERBOARD
