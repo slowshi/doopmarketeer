@@ -1,7 +1,9 @@
 // environment variables eventually
-const API_URL = 'https://doopmarketeer-api.vercel.app';
+const API_URL = 'https://doopmarketeer-api.vercel.app'
 // const API_URL = 'http://localhost:8000'
-const ETH_RPC_URL = 'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
+const ETH_RPC_URL = 'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
+const IPFS_GATEWAY = 'https://ipfs.io/ipfs'
+const DOOPLICATOR_URL = 'https://metadata.artlab.xyz/0185fa75-ba04-8156-9fbe-bb39dc263392';
 const currencyMap = {
   usd: {
     label: 'USD',
@@ -87,9 +89,12 @@ const searchColors = {
     dark: palette.PINK_200
   }
 }
+
 export {
   API_URL,
   ETH_RPC_URL,
+  DOOPLICATOR_URL,
+  IPFS_GATEWAY,
   currencyMap,
   marketTabs,
   palette,

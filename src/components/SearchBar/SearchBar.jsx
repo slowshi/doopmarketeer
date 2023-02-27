@@ -61,7 +61,7 @@ function SearchBar({value, type, onSubmit}) {
                 <MenuList>
                   <MenuItem onClick={()=>handleMenuSelect(searchTypes.ADDRESS)}>Ethereum Address</MenuItem>
                   <MenuItem onClick={()=>handleMenuSelect(searchTypes.DOODLE)}>Doodle ID</MenuItem>
-                  <MenuItem onClick={()=>handleMenuSelect(searchTypes.DOOPLICATOR)} isDisabled>Dooplicator ID</MenuItem>
+                  <MenuItem onClick={()=>handleMenuSelect(searchTypes.DOOPLICATOR)}>Dooplicator ID</MenuItem>
                   <MenuItem onClick={()=>handleMenuSelect(searchTypes.GENESIS_BOX)} isDisabled>Genesis Box ID</MenuItem>
                 </MenuList>
               </>

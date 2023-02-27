@@ -28,6 +28,7 @@ import Nav from '../../components/Nav/Nav'
 import SearchBar from "../../components/SearchBar/SearchBar"
 import DoodleSpinner from "../../components/DoodleSpinner/DoodleSpinner"
 import SingleDoop from "../../components/SingleDoop/SingleDoop"
+import DooplicatorCard from "../../components/DooplicatorCard/DooplicatorCard"
 function Search() {
   const dispatch = useDispatch()
   const [input, setInput] = useState('')
@@ -132,7 +133,8 @@ function Search() {
           {
             {
               [searchTypes.ADDRESS]: <Dooplications address={searchValue}/>,
-              [searchTypes.DOODLE]: <SingleDoop tokenId={searchValue}/>
+              [searchTypes.DOODLE]: <SingleDoop tokenId={searchValue}/>,
+              [searchTypes.DOOPLICATOR]: <DooplicatorCard tokenId={searchValue}/>
             }[searchType]
           }
         </Stack>

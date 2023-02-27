@@ -14,7 +14,6 @@ Finds Dooplicator and Doopmarket history of a given Ethereum Address. Using doop
   - Total Doopmarket Volume
 - More Wallet Stats
   - Total
-- Dooplicator Search
 - Dooplicator type when you pull Doop
 - Dooplicator adjusted prices
 

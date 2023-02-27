@@ -19,7 +19,7 @@ import WearbleImage from "../WearableImage/WearableImage"
 import { useInView } from "react-intersection-observer"
 import {cacheFetch} from '../../utils/cacheFetch'
 import {useSelector, useDispatch, shallowEqual} from "react-redux"
-import { API_URL, currencyMap } from '../../utils/constants'
+import { API_URL, currencyMap, IPFS_GATEWAY } from '../../utils/constants'
 
 function DoodleCard({doop}) {
   const dispatch = useDispatch()
@@ -28,14 +28,7 @@ function DoodleCard({doop}) {
   const image = useSelector((state)=>{
     const data = state.app.assets[doop.tokenId]
     if(typeof data === 'undefined') return ''
-
-    const params = {
-      url: `https://alchemy.mypinata.cloud/ipfs/${data.image.substring(7)}`,
-      w: 256,
-      q: 75
-    }
-
-    return `https://doopmarket.doodles.app/_next/image?${new URLSearchParams(params)}`
+    return `${IPFS_GATEWAY}/${data.image.substring(7)}`
   }, shallowEqual)
 
   const totalCost = useSelector((state)=>{
@@ -109,7 +102,7 @@ function DoodleCard({doop}) {
       type: 'addAssets',
       payload: {
         tokenId: doop.tokenId,
-        data: data
+        data
       }
     })
   }
