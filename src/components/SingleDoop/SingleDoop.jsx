@@ -1,27 +1,29 @@
 import { useEffect } from 'react'
-import {useSelector, useDispatch} from "react-redux"
+import { useSelector, useDispatch } from 'react-redux'
 import DoodleCard from '../DoodleCard/DoodleCard'
 
-function SingleDoop({tokenId}) {
+function SingleDoop({ tokenId }) {
   const dispatch = useDispatch()
-  const loading = useSelector((state)=>state.app.searchLoading)
+  const loading = useSelector((state) => state.app.searchLoading)
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch({
       type: 'setSearchLoading',
-      payload: false
+      payload: false,
     })
-  },[tokenId, loading])
+  }, [tokenId, loading])
 
-  return(
-    !isNaN(tokenId) ?
-      <DoodleCard doop={{
+  return !isNaN(tokenId) ? (
+    <DoodleCard
+      doop={{
         tokenId,
         functionName: '',
         timeStamp: 0,
-        from: ''
-      }}></DoodleCard>
-    : ''
+        from: '',
+      }}
+    ></DoodleCard>
+  ) : (
+    ''
   )
 }
-export default SingleDoop;
+export default SingleDoop
