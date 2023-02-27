@@ -103,14 +103,20 @@ function Search() {
       }
     }
 
-    function handlePopstate() {
-      loadAddress()
-    }
-
-    window.addEventListener("popstate", handlePopstate)
 
     return () => {
-      window.removeEventListener("popstate", handlePopstate)
+      dispatch({
+        type: 'setSearchType',
+        payload: searchTypes.ADDRESS
+      })
+      dispatch({
+        type: 'setSearchValue',
+        payload: ''
+      })
+      dispatch({
+        type: 'setDooplications',
+        payload: []
+      })
     }
   }, [])
 
