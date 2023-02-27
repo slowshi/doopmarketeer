@@ -14,9 +14,10 @@ import {
 import { useState, useEffect } from 'react'
 import {useSelector, useDispatch, shallowEqual} from "react-redux"
 import {cacheFetch} from '../../utils/cacheFetch'
-import { API_URL, marketTabs,} from '../../utils/constants'
+import { API_URL, marketTabs,palette} from '../../utils/constants'
 import ScrollToTop from "../../components/ScrollToTop/ScrollToTop"
 import Nav from '../../components/Nav/Nav'
+import DoodleSpinner from "../../components/DoodleSpinner/DoodleSpinner"
 
 function LeaderboardCard({item}) {
   const dispatch = useDispatch()
@@ -80,21 +81,13 @@ function LeaderboardCard({item}) {
   return (
     <>
       <ScrollToTop/>
-      <Box zIndex='10000' w='100' position='sticky' bg='#ad9999' top='0'>
+      <Box zIndex='10000' w='100' position='sticky' bg={palette.SKIN_500} top='0'>
         <Nav/>
       </Box>
       <Container maxW='container.lg'>
         <Stack w='full' paddingBottom='8'>
           {loading === true ?
-            <Center mt='4'>
-              <Spinner
-                thickness='4px'
-                speed='0.65s'
-                emptyColor='gray.300'
-                color='white'
-                size='xl'
-              />
-            </Center>
+            <DoodleSpinner/>
             :
             <Stack w='full'>
               <Text w='100' color='white' textAlign='right'>Total Doopers: {totalDoopers}</Text>
@@ -123,7 +116,7 @@ function LeaderboardCard({item}) {
             </Stack>
           }
         </Stack>
-        <Text w='full' bg='#ad9999' textAlign='right' position='fixed' bottom='0' right='0' color='white' fontSize='xs'>* Not affiliated with Doodles.</Text>
+        <Text w='full' bg={palette.SKIN_500} textAlign='right' position='fixed' bottom='0' right='0' color='white' fontSize='xs'>* Not affiliated with Doodles.</Text>
       </Container>
     </>
   )

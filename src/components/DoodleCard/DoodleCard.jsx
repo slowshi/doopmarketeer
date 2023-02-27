@@ -25,7 +25,6 @@ function DoodleCard({doop}) {
   const dispatch = useDispatch()
 
   const [avatarLoaded, setAvatarLoaded] = useState(false)
-
   const image = useSelector((state)=>{
     const data = state.app.assets[doop.tokenId]
     if(typeof data === 'undefined') return ''
@@ -38,10 +37,13 @@ function DoodleCard({doop}) {
 
     return `https://doopmarket.doodles.app/_next/image?${new URLSearchParams(params)}`
   }, shallowEqual)
+
   const totalCost = useSelector((state)=>{
     const data = state.app.assets[doop.tokenId]
     if(typeof data === 'undefined') return 0
     return data.costs.reduce((acc, cost)=>{
+      if(cost === null) return acc;
+      let price = cost.activeListing.price;
       return acc + cost.activeListing.price;
     },0)
   }, shallowEqual);
@@ -50,6 +52,7 @@ function DoodleCard({doop}) {
     const data = state.app.assets[doop.tokenId]
     if(typeof data === 'undefined') return 0;
     const total = data.costs.reduce((acc, cost)=>{
+      if(cost === null) return acc;
       return acc + cost.activeListing.price;
     },0);
 
@@ -61,6 +64,7 @@ function DoodleCard({doop}) {
     const flowPrice = state.app.flowPrice;
     if(typeof data === 'undefined') return []
     const costMap = data.costs.reduce((acc, cost)=>{
+      if(cost === null) return acc;
       let price = cost.activeListing.price;
       if(cost.activeListing?.vaultType !== 'A.ead892083b3e2c6c.DapperUtilityCoin.Vault') {
         price = price / flowPrice;
@@ -78,6 +82,12 @@ function DoodleCard({doop}) {
       };
     })
   }, shallowEqual)
+  const isDooplicated = useSelector((state)=>{
+    const data = state.app.assets[doop.tokenId]
+    if(typeof data === 'undefined') return false
+    return data.wearables
+    .filter((wearable)=> typeof wearable.wearable_id === 'undefined').length === 0
+  })
 
   const { ref, inView } = useInView({
     triggerOnce: true,
@@ -90,6 +100,7 @@ function DoodleCard({doop}) {
   }
 
   async function fetchAssets() {
+    setAvatarLoaded(false);
     const data = await cacheFetch.fetch(
       `${API_URL}/assets/${doop.tokenId}`,
       {mode:'cors'}
@@ -105,7 +116,7 @@ function DoodleCard({doop}) {
 
   useEffect(() => {
     fetchAssets()
-  }, [])
+  }, [doop.tokenId])
 
   return (
   <Card ref={ref}>
@@ -124,24 +135,32 @@ function DoodleCard({doop}) {
           </Box>
           <Box>
             <Stack h='100' justifyContent='space-evenly'>
-                <Skeleton height='22px' isLoaded={avatarLoaded}>
-                  <Text>
-                    {doop.functionName === 'dooplicateItem'? `DoopMarket - ${Number(doop.value / 10e17).toLocaleString(undefined, currencyMap.eth.toLocaleString)} Ξ`:'Dooplicator'}
-                  </Text>
-                </Skeleton>
-                <Skeleton height='22px' isLoaded={avatarLoaded}>
-                  <Text>{new Date(doop.timeStamp * 1000).toLocaleString()}</Text>
-                </Skeleton>
-                {doop.from !== '' ?
-                <Skeleton height='22px' isLoaded={avatarLoaded}>
-                  <Link fontWeight='bold' color='#746566' href={`/?address=${doop.from}`}>
-                    {doop.from.substring(0, 4) + "..." + doop.from.substring(doop.from.length - 4)}
-                  </Link>
-                </Skeleton>: ''
-                }
-                <Skeleton height='22px' isLoaded={avatarLoaded}>
-                  <Text>Total {totalCost.toLocaleString(undefined, currencyMap.usd.toLocaleString)} | {`${totalCostETH.toLocaleString(undefined, currencyMap.eth.toLocaleString)} Ξ`}</Text>
-                </Skeleton>
+              {doop.functionName ?
+              <Skeleton height='22px' isLoaded={avatarLoaded}>
+                <Text>
+                  {doop.functionName === 'dooplicateItem'? `DoopMarket - ${Number(doop.value / 10e17).toLocaleString(undefined, currencyMap.eth.toLocaleString)} Ξ`:'Dooplicator'}
+                </Text>
+              </Skeleton>
+              :
+              <Skeleton height='22px' isLoaded={avatarLoaded}>
+                <Text>{isDooplicated ? 'Dooplicated' : 'Not Dooplicated'}</Text>
+              </Skeleton>
+              }
+              {doop.timeStamp !== 0 ?
+              <Skeleton height='22px' isLoaded={avatarLoaded}>
+                <Text>{new Date(doop.timeStamp * 1000).toLocaleString()}</Text>
+              </Skeleton>
+              : ''}
+              {doop.from !== '' ?
+              <Skeleton height='22px' isLoaded={avatarLoaded}>
+                <Link fontWeight='bold' color='#746566' href={`/?address=${doop.from}`}>
+                  {doop.from.substring(0, 4) + "..." + doop.from.substring(doop.from.length - 4)}
+                </Link>
+              </Skeleton>: ''
+              }
+              <Skeleton height='22px' isLoaded={avatarLoaded}>
+                <Text>Total {totalCost.toLocaleString(undefined, currencyMap.usd.toLocaleString)} | {`${totalCostETH.toLocaleString(undefined, currencyMap.eth.toLocaleString)} Ξ`}</Text>
+              </Skeleton>
             </Stack>
           </Box>
         </Flex>

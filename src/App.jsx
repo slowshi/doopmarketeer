@@ -20,7 +20,6 @@ import {
   Button,
   ButtonGroup,
   Box,
-  useBoolean,
 } from "@chakra-ui/react"
 import { useState, useEffect } from 'react'
 import {useSelector, useDispatch, shallowEqual} from "react-redux"
@@ -42,11 +41,7 @@ function App() {
 
   const [input, setInput] = useState('')
   const [searchParamsAddress, setSearchParamsAddress] = useState('')
-  const [loading, setLoading] = useBoolean()
-  const [stats, setStats] = useBoolean()
-  const [leaderboard, setLeaderboard] = useBoolean()
   const dooplications = useSelector((state)=>state.app.dooplications, shallowEqual)
-  const submittedAddress = useSelector((state)=>state.app.address)
   const activeMarketTab = useSelector((state)=>state.app.activeMarketTab)
 
   useEffect(() => {

@@ -7,8 +7,16 @@ Finds Dooplicator and Doopmarket history of a given Ethereum Address. Using doop
 
 
 ### Todo:
-- Wearable Info
-- Wearable Market Prices?
+- More Leaderboard Stats
+  - 24hr/7day doops
+  - Total Doops by Market/Users
+  - Graph?
+  - Total Doopmarket Volume
+- More Wallet Stats
+  - Total
+- Dooplicator Search
+- Dooplicator type when you pull Doop
+- Dooplicator adjusted prices
 
 
 ### Buy me a beer

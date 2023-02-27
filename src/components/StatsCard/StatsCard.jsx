@@ -9,12 +9,14 @@ import {
   StatLabel,
   StatNumber,
   StatHelpText,
+  Center,
+  Spinner,
 } from "@chakra-ui/react"
 import { useState } from 'react'
 import {useSelector, shallowEqual} from "react-redux"
+import DoodleSpinner from "../DoodleSpinner/DoodleSpinner"
 
-function StatsCard({item}) {
-  const [loaded, setLoaded] = useState(false)
+function StatsCard({loading}) {
 
   const allAssetsSelector = (state)=> {
     const data = state.app.dooplications
@@ -46,8 +48,11 @@ function StatsCard({item}) {
   const totalWearables = useSelector(totalWearablesSelector, shallowEqual)
 
   return (
-    <Card w='full' mb='4'>
+    <Card w='full'>
       <CardBody>
+        {loading ?
+          <DoodleSpinner/>
+        :
         <SimpleGrid columns={[2, null, 3]} spacing='2'>
           <Box>
             <Stat>
@@ -76,9 +81,12 @@ function StatsCard({item}) {
             </Stat>
           </Box>
         </SimpleGrid>
+        }
       </CardBody>
     </Card>
   )
 }
-
+StatsCard.defaultProps = {
+  loading: true
+};
 export default StatsCard

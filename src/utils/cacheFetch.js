@@ -3,7 +3,7 @@ import {cacheService} from './cacheService';
 class CacheFetch {
     async fetch(url, extra={}, clearCache=false) {
 
-      if (cacheService.has(url) && !clearCache && !cacheService.isExpired(url, 600)) {
+      if (cacheService.has(url) && !clearCache && !cacheService.isExpired(url, 60)) {
         return cacheService.get(url);
       }
       const  res = await fetch(url, extra)

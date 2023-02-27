@@ -119,7 +119,7 @@ function WearbleImage() {
         as={ReachLink} to="/leaderboard">Leaderboard</Button>
       </ButtonGroup>
       :''}
-      <Heading  color='#f2e7ea' fontFamily='Chalkboard SE,sans-serif' as='h4' size='md' mb='2'>
+      <Heading  color='white' fontFamily='Chalkboard SE,sans-serif' as='h4' size='md' mb='2'>
         {
           {
             [marketTabs.FEED]: 'Feed',
