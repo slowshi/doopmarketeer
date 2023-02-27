@@ -119,16 +119,6 @@ function WearbleImage() {
         as={ReachLink} to="/leaderboard">Leaderboard</Button>
       </ButtonGroup>
       :''}
-      <Heading  color='white' fontFamily='Chalkboard SE,sans-serif' as='h4' size='md' mb='2'>
-        {
-          {
-            [marketTabs.FEED]: 'Feed',
-            [marketTabs.DOOPMARKET]: 'DoopMarket',
-            [marketTabs.SEARCH]: 'Search',
-            [marketTabs.LEADERBOARD]: 'Leaderboard',
-          }[activeMarketTab]
-        }
-      </Heading>
     </Container>
   )
 }

@@ -55,8 +55,7 @@ function DoopFeed({item}) {
     if(latestBlockNumber === 0) return;
     const data = await cacheFetch.fetch(
       `${API_URL}/feed?startBlock=${latestBlockNumber}`,
-      {mode:'cors'},
-      true
+      {mode:'cors'}
     )
     dispatch({
       type: 'prependFeed',
@@ -94,6 +93,11 @@ function DoopFeed({item}) {
       <ScrollToTop/>
       <Box zIndex='10000' w='100' position='sticky' bg={palette.SKIN_500} top='0'>
         <Nav/>
+        <Container maxW='container.lg' mb='2'>
+          <Heading  color='white' fontFamily='Chalkboard SE,sans-serif' as='h4' size='md'>
+            Feed
+          </Heading>
+        </Container>
       </Box>
       <Container maxW='container.lg'>
         <Stack w='full' paddingBottom='8'>

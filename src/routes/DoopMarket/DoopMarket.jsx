@@ -10,11 +10,19 @@ import {
   Heading,
   Container,
   Button,
+  HStack,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  IconButton,
+  useBoolean,
   useBreakpointValue
 } from "@chakra-ui/react"
 import { useState, useEffect } from 'react'
-import {useSelector, useDispatch, shallowEqual} from "react-redux"
+import {useSelector, useDispatch} from "react-redux"
 import {cacheFetch} from '../../utils/cacheFetch'
+import {FaSortAmountDownAlt, FaSortAmountUp} from 'react-icons/fa'
 import DoodleCard from "../../components/DoodleCard/DoodleCard"
 import ScrollToTop from "../../components/ScrollToTop/ScrollToTop"
 import { API_URL, marketTabs, palette } from '../../utils/constants'
@@ -28,8 +36,26 @@ function DoopMarket({item}) {
   const address = useSelector((state)=>state.app.address)
   const activeMarketTab = useSelector((state)=>state.app.activeMarketTab)
   const [page, setPage] = useState(1)
-  const doopMarket = useSelector((state)=>state.app.doopMarket.slice(0, page * 5), shallowEqual)
-
+  const [sortKey, setSortKey] = useState('value')
+  const [sortDesc, setSortDesc] = useBoolean()
+  const doopMarket = useSelector((state)=>state.app.doopMarket.sort((a,b)=>{
+    if(sortDesc) {
+      if (a[sortKey] > b[sortKey]) {
+        return -1;
+      }
+      if (a[sortKey] < b[sortKey]) {
+        return 1;
+      }
+    } else {
+      if (a[sortKey] < b[sortKey]) {
+        return -1;
+      }
+      if (a[sortKey] > b[sortKey]) {
+        return 1;
+      }
+    }
+    return 0;
+  }).slice(0, page * 5))
   const fetchDoopmarket = async ()=> {
     setLoading(true)
     await setPage(1)
@@ -76,6 +102,20 @@ function DoopMarket({item}) {
       <ScrollToTop/>
       <Box zIndex='10000' w='100' position='sticky' bg={palette.SKIN_500} top='0'>
         <Nav/>
+        <Container maxW='container.lg' mb='2'>
+          <HStack justifyContent='space-between'>
+            <Heading  color='white' fontFamily='Chalkboard SE,sans-serif' as='h4' size='md'>
+              DoopMarket
+            </Heading>
+            <IconButton
+              colorScheme='whiteAlpha'
+              aria-label="Sort"
+              icon={sortDesc ? <FaSortAmountUp/> : <FaSortAmountDownAlt/>}
+              size="sm"
+              onClick={()=>setSortDesc.toggle()}
+            />
+          </HStack>
+        </Container>
       </Box>
       <Container maxW='container.lg'>
         <Stack w='full' paddingBottom='8'>

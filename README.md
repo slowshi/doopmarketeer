@@ -9,9 +9,7 @@ Finds Dooplicator and Doopmarket history of a given Ethereum Address. Using doop
 ### Todo:
 - More Leaderboard Stats
   - 24hr/7day doops
-  - Total Doops by Market/Users
   - Graph?
-  - Total Doopmarket Volume
 - More Wallet Stats
   - Total
 - Dooplicator type when you pull Doop

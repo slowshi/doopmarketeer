@@ -12,6 +12,7 @@ import {
   Spinner,
   ButtonGroup,
   Button,
+  Heading,
   Container,
   Stack,
   Box,
@@ -126,6 +127,9 @@ function Search() {
       <Box zIndex='10000' w='100' position='sticky' bg={palette.SKIN_500} top='0'>
         <Nav/>
         <Container maxW='container.lg' pb='2'>
+          <Heading  color='white' fontFamily='Chalkboard SE,sans-serif' as='h4' size='md' mb='2'>
+            Search
+          </Heading>
           <SearchBar onSubmit={handleSearchBar} value={searchValue} type={searchType}/>
         </Container>
       </Box>
