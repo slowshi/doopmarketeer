@@ -20,6 +20,7 @@ import { useInView } from "react-intersection-observer"
 import {cacheFetch} from '../../utils/cacheFetch'
 import {useSelector, useDispatch, shallowEqual} from "react-redux"
 import { API_URL, currencyMap, IPFS_GATEWAY, palette } from '../../utils/constants'
+import { Link as ReachLink } from '@reach/router'
 
 function DoodleCard({doop}) {
   const dispatch = useDispatch()
@@ -146,7 +147,7 @@ function DoodleCard({doop}) {
               : ''}
               {doop.from !== '' ?
               <Skeleton height='22px' isLoaded={avatarLoaded}>
-                <Link fontWeight='bold' color={palette.ORANGE_100} href={`/search?address=${doop.from}`}>
+                <Link fontWeight='bold' color={palette.ORANGE_100} as={ReachLink} to={`/search?address=${doop.from}`}>
                   {doop.from.substring(0, 4) + "..." + doop.from.substring(doop.from.length - 4)}
                 </Link>
               </Skeleton>: ''

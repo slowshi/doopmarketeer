@@ -22,6 +22,7 @@ import { API_URL, marketTabs,palette} from '../../utils/constants'
 import ScrollToTop from "../../components/ScrollToTop/ScrollToTop"
 import Nav from '../../components/Nav/Nav'
 import DoodleSpinner from "../../components/DoodleSpinner/DoodleSpinner"
+import { Link as ReachLink } from '@reach/router'
 
 function LeaderboardCard({item}) {
   const dispatch = useDispatch()
@@ -148,7 +149,7 @@ function LeaderboardCard({item}) {
                   </Box>
                   {leaderboard.map((user)=>
                     <Box key={user.address} w='full' display='flex' justifyContent='space-between'>
-                      <Link fontWeight='bold' color={palette.ORANGE_100} fontSize={fontSize} flex='2' href={`/search?address=${user.address}`}>{user.shortAddress}</Link>
+                      <Link fontWeight='bold' color={palette.ORANGE_100} fontSize={fontSize} flex='2' as={ReachLink} to={`/search?address=${user.address}`}>{user.shortAddress}</Link>
                       <Text fontSize={fontSize} flex='1'>{user.dooplicate}</Text>
                       <Text fontSize={fontSize} flex='1'>{user.dooplicateItem}</Text>
                       <Text fontSize={fontSize} flex='1'>{user.totalDoops}</Text>
