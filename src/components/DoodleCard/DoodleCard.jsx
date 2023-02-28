@@ -133,6 +133,17 @@ function DoodleCard({ doop }) {
                     <Text>{isDooplicated ? 'Dooplicated' : 'Not Dooplicated'}</Text>
                   </Skeleton>
                 )}
+                {typeof doop.currentBasePrice !== 'undefined' ? (
+                  <Skeleton height="22px" isLoaded={avatarLoaded}>
+                    <Text>
+                      Cost{' '}
+                      {Number(doop.currentBasePrice / 10e17).toLocaleString(undefined, currencyMap.eth.toLocaleString)}{' '}
+                      Ξ
+                    </Text>
+                  </Skeleton>
+                ) : (
+                  ''
+                )}
                 {doop.timeStamp !== 0 ? (
                   <Skeleton height="22px" isLoaded={avatarLoaded}>
                     <Text>{new Date(doop.timeStamp * 1000).toLocaleString()}</Text>
@@ -149,6 +160,15 @@ function DoodleCard({ doop }) {
                       to={`/search?address=${doop.from}`}
                     >
                       {doop.from.substring(0, 4) + '...' + doop.from.substring(doop.from.length - 4)}
+                    </Link>
+                  </Skeleton>
+                ) : (
+                  ''
+                )}
+                {typeof doop.marketUrl !== 'undefined' ? (
+                  <Skeleton height="22px" isLoaded={avatarLoaded}>
+                    <Link fontWeight="bold" color={palette.ORANGE_100} href={doop.marketUrl} isExternal>
+                      Listing
                     </Link>
                   </Skeleton>
                 ) : (

@@ -88,6 +88,19 @@ const appReducer = (state = initialState, action) => {
           [action.payload.tokenId]: action.payload.data
         }
       }
+    case "setUndoopedDoodles":
+        return {
+          ...state,
+          undoopedDoodles: [...action.payload]
+      }
+    case "appendUndoopedDoodles":
+      return {
+        ...state,
+        undoopedDoodles: [
+          ...state.undoopedDoodles,
+          ...action.payload
+        ]
+    }
     case "setFeed":
         return {
           ...state,

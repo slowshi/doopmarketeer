@@ -5,6 +5,7 @@ import DoopFeed from './routes/DoopFeed/DoopFeed'
 import Search from './routes/Search/Search'
 import LeaderboardCard from './routes/LeaderboardCard/LeaderboardCard'
 import DoopMarket from './routes/DoopMarket/DoopMarket'
+import Undooped from './routes/Undooped/Undooped'
 import { cacheEthers } from './utils/cacheEthers'
 import { Router, globalHistory } from '@reach/router'
 
@@ -41,6 +42,7 @@ function App() {
       <DoopMarket path='/doopmarket'/>
       <LeaderboardCard path='/leaderboard'/>
       <Search path='/search'/>
+      <Undooped path='/undooped'/>
     </Router>
   )
 }

@@ -39,7 +39,8 @@ const marketTabs = {
   LEADERBOARD: 'leaderboard',
   FEED: 'feed',
   DOOPMARKET: 'doopmarket',
-  SEARCH: 'search'
+  SEARCH: 'search',
+  UNDOOPED: 'undooped'
 }
 const palette = {
   PINK_100: '#FFD2EA',

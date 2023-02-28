@@ -119,6 +119,13 @@ function WearbleImage() {
             Search
           </Button>
           <Button
+            colorScheme={activeMarketTab === marketTabs.UNDOOPED ? 'blackAlpha' : 'whiteAlpha'}
+            as={ReachLink}
+            to="/undooped"
+          >
+            Undooped
+          </Button>
+          <Button
             colorScheme={activeMarketTab === marketTabs.LEADERBOARD ? 'blackAlpha' : 'whiteAlpha'}
             as={ReachLink}
             to="/leaderboard"
