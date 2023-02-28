@@ -106,8 +106,9 @@ function DoodleCard({ doop }) {
         data,
       },
     })
+
     const doopId = doop.dooplicatorId
-    if (doopId !== '') {
+    if (doopId !== '' && typeof doopId !== 'undefined') {
       const data = await cacheFetch.fetch(`${DOOPLICATOR_URL}/${doopId}`, { mode: 'cors' })
       dispatch({
         type: 'addDooplicatorAssets',

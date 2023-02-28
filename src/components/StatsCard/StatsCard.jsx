@@ -69,11 +69,27 @@ function StatsCard({ loading }) {
     }, 0)
     return totalValue / ethPrice
   }
+  const totalCostSelector = (state) => {
+    return state.app.dooplications.reduce((acc, item) => acc + Number(item.value), 0)
+  }
   const totalDoops = useSelector((state) => state.app.dooplications.length, shallowEqual)
-  const totalCost = useSelector(
-    (state) => state.app.dooplications.reduce((acc, item) => acc + Number(item.value), 0),
-    shallowEqual,
-  )
+  const totalCost = useSelector(totalCostSelector, shallowEqual)
+  const costPerWearables = useSelector((state) => {
+    const doopMarketWearables = allAssetsSelector(state)
+      .filter((item) => item.doop.functionName === 'dooplicateItem')
+      .reduce((acc, item) => {
+        let multiple = 1
+        if (typeof item.doop.dooplicatorId !== 'undefined') {
+          multiple = getRarity(state, item.doop.dooplicatorId)
+        }
+        if (typeof item.asset.wearables !== 'undefined') {
+          acc += item.asset.wearables.length * multiple
+        }
+        return acc
+      }, 0)
+    const totalCost = totalCostSelector(state)
+    return totalCost / doopMarketWearables
+  })
   const totalWearables = useSelector(totalWearablesSelector, shallowEqual)
   const totalWearableValue = useSelector(totalWearablesValueSelector, shallowEqual)
   return (
@@ -104,7 +120,7 @@ function StatsCard({ loading }) {
             <Box>
               <Stat>
                 <StatLabel>Cost Per Wearable</StatLabel>
-                <StatNumber>{`${Math.round((totalCost / totalWearables / 10e17) * 10000) / 10000} Ξ`}</StatNumber>
+                <StatNumber>{`${Math.round((costPerWearables / 10e17) * 10000) / 10000} Ξ`}</StatNumber>
               </Stat>
             </Box>
             <Box>
