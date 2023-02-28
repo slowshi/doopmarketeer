@@ -19,26 +19,47 @@ import './DoodleCard.css'
 import WearbleImage from '../WearableImage/WearableImage'
 import { cacheFetch } from '../../utils/cacheFetch'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
-import { API_URL, currencyMap, IPFS_GATEWAY, palette } from '../../utils/constants'
+import { API_URL, currencyMap, DOOPLICATOR_URL, IPFS_GATEWAY, palette } from '../../utils/constants'
 import { Link as ReachLink } from '@reach/router'
 
 function DoodleCard({ doop }) {
   const dispatch = useDispatch()
 
   const [avatarLoaded, setAvatarLoaded] = useBoolean()
+
   const image = useSelector((state) => {
     const data = state.app.assets[doop.tokenId]
     if (typeof data === 'undefined') return ''
     return `${IPFS_GATEWAY}/${data.image.substring(7)}`
   }, shallowEqual)
+  const doopRaritySelector = (state) => {
+    let multiple = null
+    if (doop.dooplicatorId !== '') {
+      const doopData = state.app.dooplicatorAssets[doop.dooplicatorId]
+      if (typeof doopData !== 'undefined') {
+        const trait = doopData.attributes.find((item) => item.trait_type === 'Rarity')
+        if (trait.value === 'Rare') {
+          multiple = 3
+        } else if (trait.value === 'Common') {
+          multiple = 2
+        } else if (trait.value === 'Very Common') {
+          multiple = 1
+        }
+      }
+    }
+    return multiple
+  }
+  const doopRarity = useSelector(doopRaritySelector)
 
   const totalCost = useSelector((state) => {
     const data = state.app.assets[doop.tokenId]
+    let multiple = doopRaritySelector(state)
     if (typeof data === 'undefined') return 0
-    return data.costs.reduce((acc, cost) => {
+    const total = data.costs.reduce((acc, cost) => {
       if (cost === null) return acc
       return acc + cost.activeListing.price
     }, 0)
+    return multiple * total
   }, shallowEqual)
   const ethPrice = useSelector((state) => state.app.ethPrice)
 
@@ -84,6 +105,17 @@ function DoodleCard({ doop }) {
         data,
       },
     })
+    const doopId = doop.dooplicatorId
+    if (doopId !== '') {
+      const data = await cacheFetch.fetch(`${DOOPLICATOR_URL}/${doopId}`, { mode: 'cors' })
+      dispatch({
+        type: 'addDooplicatorAssets',
+        payload: {
+          tokenId: doopId,
+          data,
+        },
+      })
+    }
   }
 
   useEffect(() => {
@@ -91,7 +123,7 @@ function DoodleCard({ doop }) {
     return () => {
       setAvatarLoaded.off()
     }
-  }, [doop.tokenId])
+  }, [doop.tokenId, doop.dooplicatorId])
 
   return (
     <Card>
@@ -180,7 +212,7 @@ function DoodleCard({ doop }) {
             <Wrap spacing="20px">
               {wearables.map((item, index) => (
                 <WrapItem key={index}>
-                  <WearbleImage item={item}></WearbleImage>
+                  <WearbleImage item={item} rarity={doopRarity}></WearbleImage>
                 </WrapItem>
               ))}
             </Wrap>

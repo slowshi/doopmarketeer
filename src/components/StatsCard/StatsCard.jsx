@@ -4,12 +4,33 @@ import { currencyMap } from '../../utils/constants'
 import DoodleSpinner from '../DoodleSpinner/DoodleSpinner'
 
 function StatsCard({ loading }) {
+  const getRarity = (state, dooplicatorId) => {
+    let multiple = null
+    if (dooplicatorId !== '') {
+      const doopData = state.app.dooplicatorAssets[dooplicatorId]
+      if (typeof doopData !== 'undefined') {
+        const trait = doopData.attributes.find((item) => item.trait_type === 'Rarity')
+        if (trait.value === 'Rare') {
+          multiple = 3
+        } else if (trait.value === 'Common') {
+          multiple = 2
+        } else if (trait.value === 'Very Common') {
+          multiple = 1
+        }
+      }
+    }
+    return multiple
+  }
+
   const allAssetsSelector = (state) => {
     const data = state.app.dooplications
     const assets = state.app.assets
     const allAssets = data.map((doop) => {
-      if (typeof assets[doop.tokenId] === 'undefined') return {}
-      return assets[doop.tokenId]
+      if (typeof assets[doop.tokenId] === 'undefined') return { doop: {}, asset: {} }
+      return {
+        doop,
+        asset: assets[doop.tokenId],
+      }
     })
     return allAssets
   }
@@ -17,8 +38,12 @@ function StatsCard({ loading }) {
   const totalWearablesSelector = (state) => {
     const allAssets = allAssetsSelector(state)
     const totalWearables = allAssets.reduce((acc, item) => {
-      if (typeof item.wearables !== 'undefined') {
-        acc += item.wearables.length
+      let multiple = 1
+      if (typeof item.doop.dooplicatorId !== 'undefined') {
+        multiple = getRarity(state, item.doop.dooplicatorId)
+      }
+      if (typeof item.asset.wearables !== 'undefined') {
+        acc += item.asset.wearables.length * multiple
       }
       return acc
     }, 0)
@@ -27,13 +52,18 @@ function StatsCard({ loading }) {
   const totalWearablesValueSelector = (state) => {
     const allAssets = allAssetsSelector(state)
     const ethPrice = state.app.ethPrice
+
     const totalValue = allAssets.reduce((acc, item) => {
-      if (typeof item.wearables !== 'undefined') {
-        const assetValue = item.costs.reduce((acc, cost) => {
+      let multiple = 1
+      if (typeof item.doop.dooplicatorId !== 'undefined') {
+        multiple = getRarity(state, item.doop.dooplicatorId)
+      }
+      if (typeof item.asset.wearables !== 'undefined') {
+        const assetValue = item.asset.costs.reduce((acc, cost) => {
           if (cost === null) return acc
           return acc + cost.activeListing.price
         }, 0)
-        acc += assetValue
+        acc += assetValue * multiple
       }
       return acc
     }, 0)

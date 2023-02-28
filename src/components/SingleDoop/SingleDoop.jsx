@@ -17,6 +17,7 @@ function SingleDoop({ tokenId }) {
     <DoodleCard
       doop={{
         tokenId,
+        dooplicatorId: '',
         functionName: '',
         timeStamp: 0,
         from: '',

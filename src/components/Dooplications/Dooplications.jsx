@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { cacheFetch } from '../../utils/cacheFetch'
 import DoodleCard from '../DoodleCard/DoodleCard'
-import { API_URL } from '../../utils/constants'
+import { API_URL, DOOPLICATOR_URL } from '../../utils/constants'
 import StatsCard from '../StatsCard/StatsCard'
 
 function Dooplications({ address }) {
@@ -57,6 +57,17 @@ function Dooplications({ address }) {
         data: data,
       },
     })
+    const doopId = doop.dooplicatorId
+    if (doopId !== '') {
+      const data = await cacheFetch.fetch(`${DOOPLICATOR_URL}/${doopId}`, { mode: 'cors' })
+      dispatch({
+        type: 'addDooplicatorAssets',
+        payload: {
+          tokenId: doopId,
+          data,
+        },
+      })
+    }
     return data
   }
 
