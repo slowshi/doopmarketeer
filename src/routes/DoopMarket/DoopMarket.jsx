@@ -74,6 +74,12 @@ function DoopMarket() {
       payload: marketTabs.DOOPMARKET,
     })
     fetchDoopmarket()
+    return () => {
+      dispatch({
+        type: 'setDoopMarket',
+        payload: [],
+      })
+    }
   }, [])
   useEffect(() => {
     const feedInterval = setInterval(checkFeed, 20000)

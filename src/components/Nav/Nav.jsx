@@ -52,6 +52,9 @@ function WearbleImage() {
                     <MenuItem as={ReachLink} to="/search">
                       Search
                     </MenuItem>
+                    <MenuItem as={ReachLink} to="/undooped">
+                      Undooped
+                    </MenuItem>
                     <MenuItem as={ReachLink} to="/leaderboard">
                       Leaderboard
                     </MenuItem>

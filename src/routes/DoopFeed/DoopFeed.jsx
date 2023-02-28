@@ -61,6 +61,12 @@ function DoopFeed() {
       payload: marketTabs.FEED,
     })
     fetchHistory()
+    return () => {
+      dispatch({
+        type: 'setFeed',
+        payload: [],
+      })
+    }
   }, [])
 
   useEffect(() => {

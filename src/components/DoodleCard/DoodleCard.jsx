@@ -11,9 +11,10 @@ import {
   Skeleton,
   Center,
   Link,
+  useBoolean,
   SkeletonCircle,
 } from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import './DoodleCard.css'
 import WearbleImage from '../WearableImage/WearableImage'
 import { cacheFetch } from '../../utils/cacheFetch'
@@ -24,7 +25,7 @@ import { Link as ReachLink } from '@reach/router'
 function DoodleCard({ doop }) {
   const dispatch = useDispatch()
 
-  const [avatarLoaded, setAvatarLoaded] = useState(false)
+  const [avatarLoaded, setAvatarLoaded] = useBoolean()
   const image = useSelector((state) => {
     const data = state.app.assets[doop.tokenId]
     if (typeof data === 'undefined') return ''
@@ -39,17 +40,7 @@ function DoodleCard({ doop }) {
       return acc + cost.activeListing.price
     }, 0)
   }, shallowEqual)
-
-  const totalCostETH = useSelector((state) => {
-    const data = state.app.assets[doop.tokenId]
-    if (typeof data === 'undefined') return 0
-    const total = data.costs.reduce((acc, cost) => {
-      if (cost === null) return acc
-      return acc + cost.activeListing.price
-    }, 0)
-
-    return total / state.app.ethPrice
-  }, shallowEqual)
+  const ethPrice = useSelector((state) => state.app.ethPrice)
 
   const wearables = useSelector((state) => {
     const data = state.app.assets[doop.tokenId]
@@ -81,11 +72,10 @@ function DoodleCard({ doop }) {
   })
 
   function imageLoaded() {
-    setAvatarLoaded(true)
+    setAvatarLoaded.on()
   }
 
   async function fetchAssets() {
-    setAvatarLoaded(false)
     const data = await cacheFetch.fetch(`${API_URL}/assets/${doop.tokenId}`, { mode: 'cors' })
     dispatch({
       type: 'addAssets',
@@ -98,6 +88,9 @@ function DoodleCard({ doop }) {
 
   useEffect(() => {
     fetchAssets()
+    return () => {
+      setAvatarLoaded.off()
+    }
   }, [doop.tokenId])
 
   return (
@@ -177,7 +170,7 @@ function DoodleCard({ doop }) {
                 <Skeleton height="22px" isLoaded={avatarLoaded}>
                   <Text>
                     Total {totalCost.toLocaleString(undefined, currencyMap.usd.toLocaleString)} |{' '}
-                    {`${totalCostETH.toLocaleString(undefined, currencyMap.eth.toLocaleString)} Ξ`}
+                    {`${Number(totalCost / ethPrice).toLocaleString(undefined, currencyMap.eth.toLocaleString)} Ξ`}
                   </Text>
                 </Skeleton>
               </Stack>
