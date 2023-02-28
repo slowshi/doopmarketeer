@@ -54,6 +54,7 @@ function DoodleCard({ doop }) {
   const totalCost = useSelector((state) => {
     const data = state.app.assets[doop.tokenId]
     let multiple = doopRaritySelector(state)
+    if (multiple === null) multiple = 1
     if (typeof data === 'undefined') return 0
     const total = data.costs.reduce((acc, cost) => {
       if (cost === null) return acc
