@@ -88,7 +88,7 @@ function StatsCard({ loading }) {
         return acc
       }, 0)
     const totalCost = totalCostSelector(state)
-    return totalCost / doopMarketWearables
+    return doopMarketWearables === 0 ? 0 : totalCost / doopMarketWearables
   })
   const totalWearables = useSelector(totalWearablesSelector, shallowEqual)
   const totalWearableValue = useSelector(totalWearablesValueSelector, shallowEqual)
