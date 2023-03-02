@@ -11,13 +11,14 @@ import {
   StatLabel,
   StatNumber,
   SkeletonCircle,
+  Link,
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import { cacheFetch } from '../../utils/cacheFetch'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
-import { DOOPLICATOR_URL, IPFS_GATEWAY } from '../../utils/constants'
+import { currencyMap, DOOPLICATOR_URL, IPFS_GATEWAY, palette } from '../../utils/constants'
 
-function DooplicatorCard({ tokenId }) {
+function DooplicatorCard({ tokenId, price, url }) {
   const dispatch = useDispatch()
   const loading = useSelector((state) => state.app.searchLoading)
   const [avatarLoaded, setAvatarLoaded] = useState(false)
@@ -81,6 +82,24 @@ function DooplicatorCard({ tokenId }) {
               <Skeleton isLoaded={avatarLoaded}>
                 <Text m="2">{attributes['Rarity']}</Text>
               </Skeleton>
+              {typeof price !== 'undefined' ? (
+                <Skeleton isLoaded={avatarLoaded}>
+                  <Text m="2">
+                    Cost {Number(price / 10e17).toLocaleString(undefined, currencyMap.eth.toLocaleString)} Ξ
+                  </Text>
+                </Skeleton>
+              ) : (
+                ''
+              )}
+              {typeof url !== 'undefined' ? (
+                <Skeleton isLoaded={avatarLoaded}>
+                  <Link m="2" fontWeight="bold" color={palette.ORANGE_100} href={url} isExternal>
+                    Link
+                  </Link>
+                </Skeleton>
+              ) : (
+                ''
+              )}
               <Box display="flex" flexDirection="row" flexWrap="wrap">
                 <Skeleton isLoaded={avatarLoaded}>
                   <Stat m="2">
@@ -102,5 +121,8 @@ function DooplicatorCard({ tokenId }) {
     </Card>
   )
 }
-
+DooplicatorCard.defaultProps = {
+  tokenId: '',
+  url: '',
+}
 export default DooplicatorCard

@@ -10,6 +10,7 @@ const initialState = Object.freeze({
   assets: {},
   dooplicatorAssets: {},
   leaderboard: [],
+  undoopedDooplicators: [],
   feed: [],
   activeMarketTab: '',
   leaderboardSort: 'totalDoops'
@@ -100,7 +101,12 @@ const appReducer = (state = initialState, action) => {
           ...state.undoopedDoodles,
           ...action.payload
         ]
-    }
+      }
+    case 'setUndoopedDooplicators':
+      return {
+        ...state,
+        undoopedDooplicators: action.payload
+      }
     case "setFeed":
         return {
           ...state,

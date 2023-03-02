@@ -16,6 +16,7 @@ const store = createStore(rootReducer,
     dooplicatorAssets: {},
     leaderboard: [],
     undoopedDoodles: [],
+    undoopedDooplicators: [],
     feed: [],
     activeMarketTab: '',
     leaderboardSort: 'totalDoops'
