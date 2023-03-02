@@ -15,7 +15,9 @@ function Dooplications({ address }) {
   const dooplications = useSelector((state) => {
     return state.app.dooplications.slice(0, page * 5)
   }, shallowEqual)
-
+  const totalDooplications = useSelector((state) => {
+    return state.app.dooplications.length
+  }, shallowEqual)
   const loadMore = async () => {
     setPage(page + 1)
   }
@@ -90,11 +92,15 @@ function Dooplications({ address }) {
         {dooplications.map((doop) => (
           <DoodleCard key={doop.tokenId} doop={doop}></DoodleCard>
         ))}
-        <Center>
-          <Button colorScheme="whiteAlpha" onClick={loadMore}>
-            Load More
-          </Button>
-        </Center>
+        {dooplications.length < totalDooplications ? (
+          <Center>
+            <Button colorScheme="whiteAlpha" onClick={loadMore}>
+              Load More
+            </Button>
+          </Center>
+        ) : (
+          ''
+        )}
       </Stack>
     </>
   ) : (

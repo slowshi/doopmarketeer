@@ -21,6 +21,7 @@ function DoopMarket() {
     }
     return blockNumber
   })
+  const totalDoopMarket = useSelector((state) => state.app.doopMarket.length)
   const doopMarket = useSelector((state) =>
     state.app.doopMarket
       .sort((a, b) => {
@@ -114,11 +115,15 @@ function DoopMarket() {
               {doopMarket.map((doop) => (
                 <DoodleCard key={doop.tokenId} doop={doop}></DoodleCard>
               ))}
-              <Center>
-                <Button colorScheme="whiteAlpha" onClick={loadMore}>
-                  Load More
-                </Button>
-              </Center>
+              {doopMarket.length < totalDoopMarket ? (
+                <Center>
+                  <Button colorScheme="whiteAlpha" onClick={loadMore}>
+                    Load More
+                  </Button>
+                </Center>
+              ) : (
+                ''
+              )}
             </Stack>
           )}
         </Stack>
