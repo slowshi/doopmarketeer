@@ -72,6 +72,13 @@ const searchTypes = {
   GENESIS_BOX: 'genesisBox'
 }
 
+const undoopedTypes = {
+  DOODLES: 'doodles',
+  VERY_COMMON: 'veryCommon',
+  COMMON: 'common',
+  RARE: 'rare',
+}
+
 const searchColors = {
   [searchTypes.ADDRESS]: {
     light: palette.PURPLE_100,
@@ -99,6 +106,7 @@ export {
   currencyMap,
   marketTabs,
   palette,
+  undoopedTypes,
   searchTypes,
   searchColors
 }

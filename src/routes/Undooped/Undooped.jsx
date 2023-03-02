@@ -20,11 +20,18 @@ import { useSelector, useDispatch } from 'react-redux'
 import { cacheFetch } from '../../utils/cacheFetch'
 import DoodleCard from '../../components/DoodleCard/DoodleCard'
 import ScrollToTop from '../../components/ScrollToTop/ScrollToTop'
-import { API_URL, marketTabs, palette } from '../../utils/constants'
+import { API_URL, marketTabs, palette, undoopedTypes } from '../../utils/constants'
 import Nav from '../../components/Nav/Nav'
 import DoodleSpinner from '../../components/DoodleSpinner/DoodleSpinner'
 import DooplicatorCard from '../../components/DooplicatorCard/DooplicatorCard'
+import { navigate } from '@reach/router'
 function Unused() {
+  const titles = {
+    [undoopedTypes.DOODLES]: 'Doodles',
+    [undoopedTypes.VERY_COMMON]: 'Very Common',
+    [undoopedTypes.COMMON]: 'Common',
+    [undoopedTypes.RARE]: 'Rare',
+  }
   const offset = 20
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
@@ -81,12 +88,18 @@ function Unused() {
     setLoadingMore(false)
   }
 
-  const fetchUndoopedDooplicators = async (index) => {
+  const fetchUndoopedDooplicators = async (type) => {
     setLoadingMore(true)
     dispatch({
       type: 'setUndoopedDooplicators',
       payload: [],
     })
+    let index = 0
+    if (type === undoopedTypes.COMMON) {
+      index = 1
+    } else if (type === undoopedTypes.RARE) {
+      index = 2
+    }
     const data = await cacheFetch.fetch(`${API_URL}/doop-floor?rarity=${index}`, { mode: 'cors' })
 
     dispatch({
@@ -96,22 +109,28 @@ function Unused() {
     setLoadingMore(false)
   }
 
-  const handleSliderChange = (index) => {
-    const titles = {
-      0: 'Doodles',
-      1: 'Very Common',
-      2: 'Common',
-      3: 'Rare',
-    }
-    setMenuTitle(titles[index])
-    if (index !== 0) {
-      fetchUndoopedDooplicators(index - 1)
+  const loadUndooped = (type) => {
+    setMenuTitle(titles[type])
+    if (type !== undoopedTypes.DOODLES) {
+      fetchUndoopedDooplicators(type)
       setTabIndex(1)
     } else {
       setPage(1)
       fetchUndooped()
       setTabIndex(0)
     }
+  }
+
+  const handleMenuSelect = (type) => {
+    let searchParams = ''
+    if (type !== undoopedTypes.DOODLES) {
+      searchParams = `?${new URLSearchParams({
+        type,
+      })}`
+    }
+    const url = `/undooped${searchParams}`
+    navigate(url)
+    loadUndooped(type)
   }
 
   const handleTabsChange = (index) => {
@@ -124,7 +143,16 @@ function Unused() {
       type: 'setActiveMarketTab',
       payload: marketTabs.UNDOOPED,
     })
-    fetchUndooped()
+    loadUndooped()
+    function loadUndooped() {
+      const searchParams = new URL(document.location).searchParams
+      if (searchParams.has('type')) {
+        const type = searchParams.get('type')
+        handleMenuSelect(type)
+      } else {
+        handleMenuSelect(undoopedTypes.DOODLES)
+      }
+    }
   }, [])
   return (
     <>
@@ -144,10 +172,10 @@ function Unused() {
                       {menuTitle}
                     </MenuButton>
                     <MenuList>
-                      <MenuItem onClick={() => handleSliderChange(0)}>Doodles</MenuItem>
-                      <MenuItem onClick={() => handleSliderChange(1)}>Very Common</MenuItem>
-                      <MenuItem onClick={() => handleSliderChange(2)}>Common</MenuItem>
-                      <MenuItem onClick={() => handleSliderChange(3)}>Rare</MenuItem>
+                      <MenuItem onClick={() => handleMenuSelect(undoopedTypes.DOODLES)}>Doodles</MenuItem>
+                      <MenuItem onClick={() => handleMenuSelect(undoopedTypes.VERY_COMMON)}>Very Common</MenuItem>
+                      <MenuItem onClick={() => handleMenuSelect(undoopedTypes.COMMON)}>Common</MenuItem>
+                      <MenuItem onClick={() => handleMenuSelect(undoopedTypes.RARE)}>Rare</MenuItem>
                     </MenuList>
                   </>
                 )}
