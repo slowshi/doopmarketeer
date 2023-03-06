@@ -45,7 +45,7 @@ function DooplicatorCard({ tokenId, price, url }) {
 
   async function fetchAssets() {
     setAvatarLoaded(false)
-    const data = await cacheFetch.fetch(`${DOOPLICATOR_URL}/${tokenId}`, { mode: 'cors' }, true)
+    const data = await cacheFetch.fetch(`${DOOPLICATOR_URL}/${tokenId}`, true)
     dispatch({
       type: 'addDooplicatorAssets',
       payload: {

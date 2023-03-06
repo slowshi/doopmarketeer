@@ -32,7 +32,7 @@ function Unused() {
     [undoopedTypes.COMMON]: 'Common',
     [undoopedTypes.RARE]: 'Rare',
   }
-  const offset = 20
+  const limit = 20
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const [loadingMore, setLoadingMore] = useState(false)
@@ -66,7 +66,7 @@ function Unused() {
       type: 'setUndoopedDoodles',
       payload: [],
     })
-    const data = await cacheFetch.fetch(`${API_URL}/doodle-floor?page=1&offset=${offset}`, { mode: 'cors' })
+    const data = await cacheFetch.fetch(`${API_URL}/doodle-floor?page=1&limit=${limit}`)
     dispatch({
       type: 'setUndoopedDoodles',
       payload: data,
@@ -76,7 +76,7 @@ function Unused() {
 
   const loadMore = async () => {
     setLoadingMore(true)
-    const data = await cacheFetch.fetch(`${API_URL}/doodle-floor?page=${page + 1}&offset=${offset}`, { mode: 'cors' })
+    const data = await cacheFetch.fetch(`${API_URL}/doodle-floor?page=${page + 1}&limit=${limit}`)
     dispatch({
       type: 'appendUndoopedDoodles',
       payload: data,
@@ -100,7 +100,7 @@ function Unused() {
     } else if (type === undoopedTypes.RARE) {
       index = 2
     }
-    const data = await cacheFetch.fetch(`${API_URL}/doop-floor?rarity=${index}`, { mode: 'cors' })
+    const data = await cacheFetch.fetch(`${API_URL}/doop-floor?rarity=${index}`)
 
     dispatch({
       type: 'setUndoopedDooplicators',
@@ -205,7 +205,7 @@ function Unused() {
                     ))}
                     <Center>
                       <Button isLoading={loadingMore} colorScheme="whiteAlpha" onClick={loadMore}>
-                        Load More ({page * offset})
+                        Load More ({page * limit})
                       </Button>
                     </Center>
                   </Stack>

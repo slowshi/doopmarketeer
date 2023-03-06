@@ -98,7 +98,7 @@ function DoodleCard({ doop }) {
   }
 
   async function fetchAssets() {
-    const data = await cacheFetch.fetch(`${API_URL}/assets/${doop.tokenId}`, { mode: 'cors' })
+    const data = await cacheFetch.fetch(`${API_URL}/assets/${doop.tokenId}`)
     dispatch({
       type: 'addAssets',
       payload: {
@@ -109,7 +109,7 @@ function DoodleCard({ doop }) {
 
     const doopId = doop.dooplicatorId
     if (doopId !== '' && typeof doopId !== 'undefined') {
-      const data = await cacheFetch.fetch(`${DOOPLICATOR_URL}/${doopId}`, { mode: 'cors' })
+      const data = await cacheFetch.fetch(`${DOOPLICATOR_URL}/${doopId}`)
       dispatch({
         type: 'addDooplicatorAssets',
         payload: {

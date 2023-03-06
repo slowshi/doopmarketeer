@@ -74,7 +74,7 @@ function LeaderboardCard() {
 
   async function fetchAssets() {
     setLoading(true)
-    const data = await cacheFetch.fetch(`${API_URL}/leaderboard`, { mode: 'cors' })
+    const data = await cacheFetch.fetch(`${API_URL}/leaderboard`)
     dispatch({
       type: 'setLeaderboard',
       payload: data,

@@ -47,7 +47,7 @@ function DoopMarket() {
   const fetchDoopmarket = async () => {
     setLoading(true)
     await setPage(1)
-    const data = await cacheFetch.fetch(`${API_URL}/doopmarket`, { mode: 'cors' })
+    const data = await cacheFetch.fetch(`${API_URL}/doopmarket`)
     dispatch({
       type: 'setDoopMarket',
       payload: data,
@@ -57,7 +57,7 @@ function DoopMarket() {
 
   const checkFeed = async () => {
     if (latestBlockNumber === 0) return
-    const data = await cacheFetch.fetch(`${API_URL}/feed?startBlock=${latestBlockNumber}`, { mode: 'cors' }, true)
+    const data = await cacheFetch.fetch(`${API_URL}/feed?startBlock=${latestBlockNumber}`, true)
     dispatch({
       type: 'prependFeed',
       payload: data,

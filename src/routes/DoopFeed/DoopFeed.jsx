@@ -26,7 +26,7 @@ function DoopFeed() {
   const fetchHistory = async () => {
     setLoading(true)
     await setPage(1)
-    const data = await cacheFetch.fetch(`${API_URL}/history?page=1&offset=5`, { mode: 'cors' })
+    const data = await cacheFetch.fetch(`${API_URL}/history?page=1&limit=5`)
     dispatch({
       type: 'setFeed',
       payload: data,
@@ -36,7 +36,7 @@ function DoopFeed() {
 
   const checkFeed = async () => {
     if (latestBlockNumber === 0) return
-    const data = await cacheFetch.fetch(`${API_URL}/feed?startBlock=${latestBlockNumber}`, { mode: 'cors' })
+    const data = await cacheFetch.fetch(`${API_URL}/feed?startBlock=${latestBlockNumber}`)
     dispatch({
       type: 'prependFeed',
       payload: data,
@@ -45,7 +45,7 @@ function DoopFeed() {
 
   const loadMore = async () => {
     setLoadingMore(true)
-    const data = await cacheFetch.fetch(`${API_URL}/history?page=${page + 1}&offset=5`, { mode: 'cors' })
+    const data = await cacheFetch.fetch(`${API_URL}/history?page=${page + 1}&limit=5`)
     dispatch({
       type: 'appendFeed',
       payload: data,

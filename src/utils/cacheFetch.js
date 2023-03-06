@@ -1,19 +1,19 @@
 import {cacheService} from './cacheService';
 
 class CacheFetch {
-    async fetch(url, extra={}, clearCache=false) {
+    async fetch(url, clearCache=false) {
 
       if (cacheService.has(url) && !clearCache && !cacheService.isExpired(url, 180)) {
         return cacheService.get(url);
       }
-      const  res = this.fetchWithRetry(url, extra)
+      const  res = await this.fetchWithRetry(url)
       cacheService.set(url, res);
 
       return res;
     }
     async fetchWithRetry(url, retries = 5, timeout = 50) {
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {mode: 'cors'});
         const data = await response.json();
         return data;
       } catch (error) {
